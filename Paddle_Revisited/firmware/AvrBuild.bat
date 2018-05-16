@@ -1,0 +1,2 @@
+@ECHO OFF
+"C:\Program Files (x86)\Atmel\AVR Tools\AvrAssembler2\avrasm2.exe" -S "G:\MSX_Paddle_Revisited\firmware\labels.tmp" -fI -W+ie -C V2 -o "G:\MSX_Paddle_Revisited\firmware\MSX_Paddle_Revisited.hex" -d "G:\MSX_Paddle_Revisited\firmware\MSX_Paddle_Revisited.obj" -e "G:\MSX_Paddle_Revisited\firmware\MSX_Paddle_Revisited.eep" -m "G:\MSX_Paddle_Revisited\firmware\MSX_Paddle_Revisited.map" "G:\MSX_Paddle_Revisited\firmware\main.asm"

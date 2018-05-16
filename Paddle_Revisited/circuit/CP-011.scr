@@ -1,0 +1,23 @@
+# 
+# PATOLA CP-011
+# Danjovic 2018 - danjovic@hotmail.com
+# 
+
+grid mm 1
+
+#
+#  outline  84 x 37mm
+#  holes    78 x 31mm apart 2.5mm dia
+#
+Grid mm 1 off;
+Set Wire_Bend 0;
+Layer Dimension;
+Wire 0  (0 -18.5) (84 18.5) (0 -18.5);
+
+hole 2.5 (3 -15.5);
+hole 2.5 (3  15.5);
+hole 2.5 (81 15.5);
+hole 2.5 (81 -15.5);
+
+Grid Last;
+Window Fit;
