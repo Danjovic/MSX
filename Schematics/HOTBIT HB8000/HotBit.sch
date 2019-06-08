@@ -18707,7 +18707,6 @@ Source: http://www.produktinfo.conrad.com/datenblaetter/725000-749999/736880-da-
 <part name="GND39" library="supply1" deviceset="GND" device=""/>
 <part name="J10" library="hotbit" deviceset="CON_AV" device=""/>
 <part name="J15" library="hotbit" deviceset="CON-PWR" device="" value="POWER"/>
-<part name="P+40" library="supply1" deviceset="+5V" device=""/>
 <part name="GND40" library="supply1" deviceset="GND" device=""/>
 <part name="P+41" library="supply1" deviceset="+12V" device=""/>
 <part name="P-3" library="supply1" deviceset="-12V" device=""/>
@@ -18790,6 +18789,7 @@ Source: http://www.produktinfo.conrad.com/datenblaetter/725000-749999/736880-da-
 <part name="GND55" library="supply1" deviceset="GND" device=""/>
 <part name="GND56" library="supply1" deviceset="GND" device=""/>
 <part name="P+49" library="supply1" deviceset="+5V" device=""/>
+<part name="P+50" library="supply1" deviceset="+12V" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -18821,9 +18821,10 @@ Source: http://www.produktinfo.conrad.com/datenblaetter/725000-749999/736880-da-
 <text x="349.25" y="-260.35" size="2.54" layer="94" font="vector" ratio="14">Diagrama do HotBit HB8000</text>
 <text x="349.25" y="-262.89" size="1.778" layer="94" font="vector" ratio="14">Redesenhado por Danjovic, Jan 2018</text>
 <text x="-391.16" y="-45.72" size="1.778" layer="94">Rev-: Desenho inicial, Jan 2018</text>
-<text x="441.96" y="-284.48" size="2.54" layer="94" font="vector" ratio="14">-</text>
+<text x="441.96" y="-284.48" size="2.54" layer="94" font="vector" ratio="14">A</text>
 <text x="349.25" y="-265.43" size="1.778" layer="94" font="vector" ratio="14">htp://hotbit.blogger.com     danjovic@hotmail.com   </text>
 <text x="247.904" y="25.4" size="2.54" layer="92" font="vector" ratio="13" rot="R90">ADDRESS BUS</text>
+<text x="-391.16" y="-48.26" size="1.778" layer="94">Rev A: Correcao Alimentacao Conector AV, Maio 2019</text>
 </plain>
 <instances>
 <instance part="CI-19" gate="1" x="-226.06" y="149.86"/>
@@ -19318,9 +19319,6 @@ Source: http://www.produktinfo.conrad.com/datenblaetter/725000-749999/736880-da-
 </instance>
 <instance part="J10" gate="G$1" x="401.32" y="-7.62" rot="MR180"/>
 <instance part="J15" gate="G$1" x="-215.9" y="-63.5" rot="R180"/>
-<instance part="P+40" gate="1" x="393.7" y="7.62" smashed="yes">
-<attribute name="VALUE" x="396.24" y="7.62" size="1.778" layer="96" rot="R90"/>
-</instance>
 <instance part="GND40" gate="1" x="386.08" y="0"/>
 <instance part="P+41" gate="1" x="-195.58" y="-63.5" smashed="yes" rot="MR90">
 <attribute name="VALUE" x="-194.056" y="-62.23" size="1.778" layer="96" rot="MR180"/>
@@ -19604,6 +19602,9 @@ Source: http://www.produktinfo.conrad.com/datenblaetter/725000-749999/736880-da-
 <instance part="GND56" gate="1" x="60.96" y="55.88"/>
 <instance part="P+49" gate="1" x="175.26" y="-147.32" smashed="yes">
 <attribute name="VALUE" x="175.26" y="-144.78" size="1.778" layer="96" rot="R180"/>
+</instance>
+<instance part="P+50" gate="1" x="393.7" y="12.7" smashed="yes" rot="MR0">
+<attribute name="VALUE" x="395.224" y="16.51" size="1.778" layer="96" rot="MR180"/>
 </instance>
 </instances>
 <busses>
@@ -22270,11 +22271,6 @@ Source: http://www.produktinfo.conrad.com/datenblaetter/725000-749999/736880-da-
 <wire x1="137.16" y1="-142.24" x2="139.7" y2="-142.24" width="0.1524" layer="91"/>
 </segment>
 <segment>
-<pinref part="J10" gate="G$1" pin="VCC"/>
-<pinref part="P+40" gate="1" pin="+5V"/>
-<wire x1="393.7" y1="5.08" x2="393.7" y2="0" width="0.1524" layer="91"/>
-</segment>
-<segment>
 <pinref part="J15" gate="G$1" pin="+5V"/>
 <pinref part="P+42" gate="1" pin="+5V"/>
 <wire x1="-177.8" y1="-55.88" x2="-185.42" y2="-55.88" width="0.1524" layer="91"/>
@@ -24818,6 +24814,11 @@ Source: http://www.produktinfo.conrad.com/datenblaetter/725000-749999/736880-da-
 <segment>
 <pinref part="R1" gate="G$1" pin="2"/>
 <pinref part="P+44" gate="1" pin="+12V"/>
+</segment>
+<segment>
+<pinref part="J10" gate="G$1" pin="VCC"/>
+<pinref part="P+50" gate="1" pin="+12V"/>
+<wire x1="393.7" y1="10.16" x2="393.7" y2="0" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="-12V" class="0">
