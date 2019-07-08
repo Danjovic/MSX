@@ -1,0 +1,2 @@
+#!/bin/bash
+convert $1 -resize '128x64' -colorspace Gray -ordered-dither checks  $1.gif

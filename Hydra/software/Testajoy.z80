@@ -1,0 +1,227 @@
+;
+; Program to test joysticks and paddles
+; 
+;
+;
+;
+
+INCLUDE "msx_constants.inc"
+INCLUDE "msxbios.inc"
+INCLUDE "msx_system_vars.inc"
+
+PSGREG: equ 0xa0h
+PSGWR:  equ 0xa1h
+PSGRD:  equ 0xa2h
+;
+; register   7   6   5   4   3   2   1   0   
+;    14      cas kb  TB  TA  RG  LF  DW  UP
+;
+;    15      kan 1/2 PS2 PS1 P27 P26 P17 P16
+;                    
+
+;
+; Multiple Standard Paddle reading routine for MSX
+; Danjovic 2019
+
+; input: HL  - buffer for 6 paddle values
+;        C   - bit 0: 1=port 1, 0=port 2
+;
+; output IX = start of buffer
+;        (IX+0) to (IX+5) = paddle readings
+; 
+; modify af,bc,hl
+;
+FASTPADDLE:
+   di
+   ld a,15         ; select register 15
+   out (PSGREG),a 
+   in a,(PSGRD)    ; get register 15 state
+   bit 0,c         ; test for port 1/2
+   jr z,FP_DOPORT2
+FP_DOPORT1:
+   res 6,a         ; select port 1 to read
+   set 4,a         ; rise pin 8 of port 1
+   out (PSGWR),a
+   nop
+   nop
+   res 4,a         ; fall pin 8 
+   out (PSGWR),a
+   jr FP_STARSAMPLING
+   ;
+FP_DOPORT2:
+   set 6,a         ; select port 2 to read
+   set 5,a         ; rise pin 8 of port 2
+   out (PSGWR),a
+   nop
+   nop
+   res 5,a         ; fall pin 8 
+   out (PSGWR),a
+   ;
+
+ FP_STARSAMPLING
+   ld a,14  ; select register 14       
+   out (PSGREG),a
+
+;   ld l,0         ; l track pushes to stack
+;   ld h,255       ; h will be used during decode 
+   ld hl,0xff00    ; 
+   ld b,h          ; b=d=255 maximum counts
+   in a,(PSGREAD)  ; first reading
+   ld c,a
+;
+;Timing
+; no change  12+5+5+8+      13 per interaction = 43
+; one change 12+5+5+13+12+5+13 per interaction = 65 (difference = 21)
+FP_SAMPLE:         ; counting loop
+   in a,(PSGREAD)  ; 12 read input
+   cp c            ;  5 same as previous?
+   ld c,a          ;  5
+   jr nz,FP_PUSH   ; 13/8 no, then push time on stack 
+   djnz FP_SAMPLE  ; 13/8 yes, continue to sample
+   jr FP_COMPUTE   ; 13 until time is over
+   ;
+FP_PUSH:
+   push bc         ; 12   b=time c=sample  
+   inc l           ;  5   track stack usage
+   djnz FP_SAMPLE  ; 13/8 do until time is over
+   ;
+FP_COMPUTE: 
+              ; D = mask 0xFF
+   pop bc     ; iterate through saved values
+              ; b = moment c = input port sample
+   ld a,b     ; convert downcounting 
+   cpl        ; now a = upcounting cycle when fall back to 0 
+
+
+FP_TESTP0:
+   bit 0,h         ; have found paddle 0 value?
+   jr z,FP_TESTP1  ; yes try next paddle 
+   bit 0,c         ; test for paddle 0
+   jr nz,FP_TESTP1 ; try next if not activated
+   res 0,h         ; mark as found
+   ld (IX+0),a       ; save cycle where paddle was set to 0 
+
+FP_TESTP1:
+   bit 1,h         ; have found paddle 1 value?
+   jr z,FP_TESTP2  ; yes try next paddle 
+   bit 1,c         ; test for paddle 1
+   jr nz,FP_TESTP2 ; try next if not activated
+   res 1,h         ; mark as found
+   ld (IX+1),a       ; save cycle where paddle was set to 0 
+
+FP_TESTP2:
+   bit 2,h         ; have found paddle 2 value?
+   jr z,FP_TESTP3  ; yes try next paddle 
+   bit 2,c         ; test for paddle 2
+   jr nz,FP_TESTP3 ; try next if not activated
+   res 2,h         ; mark as found
+   ld (IX+2),a       ; save cycle where paddle was set to 0 
+
+FP_TESTP3:
+   bit 3,h         ; have found paddle 3 value?
+   jr z,FP_TESTP4  ; yes try next paddle 
+   bit 3,c         ; test for paddle 3
+   jr nz,FP_TESTP4 ; try next if not activated
+   res 3,h         ; mark as found
+   ld (IX+3),a       ; save cycle where paddle was set to 0 
+
+FP_TESTP4:
+   bit 4,h         ; have found paddle 4 value?
+   jr z,FP_TESTP5  ; yes try next paddle 
+   bit 4,c         ; test for paddle 4
+   jr nz,FP_TESTP5 ; try next if not activated
+   res 4,h         ; mark as found
+   ld (IX+4),a       ; save cycle where paddle was set to 0 
+   
+FP_TESTP5:
+   bit 5,h         ; have found paddle 5 value?
+   jr z,FP_TESTP6  ; yes try next paddle 
+   bit 5,c         ; test for paddle 5
+   jr nz,FP_TESTP6 ; try next if not activated
+   res 5,h         ; mark as found
+   ld (IX+5),a     ; save cycle where paddle was set to 0 
+
+FP_TESTP6:
+   dec l            ;  
+   jr nz,FP_COMPUTE ; 
+   ei
+   ret
+   
+
+   
+
+
+
+
+
+
+
+
+
+
+
+; Routine to read the mouse by direct accesses (works on MSX1/2/2+/turbo R)
+;
+; Input: DE = 09310h for mouse in port 1 (D = 10010011b, E = 00010000b)
+; 	 DE = 0EC20h for mouse in port 2 (D = 11101100b, E = 00100000b)
+; Output: H = X-offset, L = Y-offset (H = L = 255 if no mouse)
+ 
+WAIT1:  equ   10              ; Short delay value
+WAIT2:  equ   30              ; Long delay value
+ 
+GTMOUS:
+	ld	b,WAIT2	; Long delay for first read
+	call	GTOFS2	; Read bits 7-4 of the x-offset
+	and	0Fh
+	rlca
+	rlca
+	rlca
+	rlca
+	ld	c,a
+	call	GTOFST	; Read bits 3-0 of the x-offset
+	and	0Fh
+	or	c
+	ld	h,a	; Store combined x-offset
+	call	GTOFST	; Read bits 7-4 of the y-offset
+	and	0Fh
+	rlca
+	rlca
+	rlca
+	rlca
+	ld	c,a
+	call	GTOFST	; Read bits 3-0 of the y-offset
+	and 0Fh
+	or c
+	ld l,a		; Store combined y-offset
+	ret
+ 
+GTOFST:	ld b,WAIT1
+GTOFS2:	ld a,15		; Read PSG register 15 for mouse
+	di		; DI useless if the routine is used during an interrupt
+	out (0A0h),a
+	ld a,d
+	out (0A1h),a
+	xor e
+	ld d,a
+ 
+	call WAITMS	; Extra delay because the mouse is slow
+ 
+	ld a,14
+	out (0A0h),a
+	ei		; EI useless if the routine is used during an interrupt
+	in a,(0A2h)
+	ret
+WAITMS:
+	ld	a,b
+WTTR:
+	djnz	WTTR
+	db	0EDh,055h	; Back if Z80 (RETN on Z80, NOP on R800)
+	rlca
+	rlca
+	ld	b,a
+WTTR2:
+	djnz	WTTR2
+	ld	b,a	
+WTTR3:
+	djnz	WTTR3
+	ret

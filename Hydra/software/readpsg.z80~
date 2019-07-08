@@ -1,0 +1,28 @@
+;
+; Read PSG
+;
+org 0xa000
+
+ld e,5         ; illegal function call
+ld a,(0xf663)  ; VALTYP
+cp 2           ; Integer?
+jp nz,0x406f   ; no, error
+ld hl,(0xf7f8) ; yes, get argument
+ld a,15        ; read register 15 state
+call RDPSG     ;
+set 6,a        ; pre-select port 2
+bit 0,l        ; argument = even?
+jr nz,segue    ; yes, continue
+res 6,a        ; no, it was odd, select port 1 
+segue:   
+call WRTPSG    ; do the selection
+ld a,14        ; register 14
+call RDPSG     ; read buttons
+cpl            ; invert state make active=1
+and 0x3f       ; mask unused bits
+ld (0xf7f8),a  ; return argument
+xor a          ;
+ld (0xf7f9),a  ; 
+ret            ;
+
+
