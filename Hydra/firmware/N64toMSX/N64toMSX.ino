@@ -29,6 +29,11 @@
 */
 
 
+#define DEBUG
+#define debugPin 4
+#define debugPin2 5
+#define debugPin3 6
+
 ///////////////////////////////////////////////////////////////////////////////
 //  Definitions
 //  
@@ -52,6 +57,8 @@
 //
 #include <TimerOne.h>
 #include <avr/sleep.h>
+#include <avr/power.h>
+
 #include "Nintendo.h"
 
 
@@ -85,7 +92,17 @@ void setup() {
   attachInterrupt(digitalPinToInterrupt(MSX_PULSE), cycle_MSX_paddles, RISING);
   Timer1.initialize(10000);  // 10ms
 //  Timer1.restart();
-  Timer1.attachInterrupt(timeout); 
+  Timer1.attachInterrupt(timeout,10000); 
+
+  #ifdef DEBUG
+  pinMode(debugPin,OUTPUT);
+  digitalWrite(debugPin,LOW);
+  pinMode(debugPin2,OUTPUT);
+  digitalWrite(debugPin2,LOW);  
+  pinMode(debugPin3,OUTPUT);
+  digitalWrite(debugPin3,LOW);  
+  
+  #endif
 
   sei();
     
@@ -101,7 +118,13 @@ void setup() {
 //
 void loop() {
   do_N64(); // Sample  and Update Outputs
-  sleep_mode();    
+  digitalWrite(debugPin2,LOW); 
+  set_sleep_mode(SLEEP_MODE_IDLE);
+  sleep_enable();
+  power_timer0_disable();
+  sleep_mode(); 
+  sleep_disable();  
+  digitalWrite(debugPin2,HIGH);   
 }
 
 // Callback function for Timer1 timeout
@@ -122,8 +145,13 @@ void loop() {
 //
 void timeout()
 {
-  Timer1.setPeriod(10000); // 10ms 
-  Timer1.restart(); 
+ // Timer1.stop();
+  Timer1.setPeriod(10000); // 10ms
+ // Timer1.restart(); 
+  #ifdef DEBUG
+  digitalWrite(debugPin,HIGH);
+  digitalWrite(debugPin,LOW);
+  #endif
 }
 
 
@@ -134,7 +162,10 @@ void timeout()
 void cycle_MSX_paddles(void) {
   uint8_t i,j;
   uint8_t msx_buttons = ~MSX_DDR; // save button state
-
+  #ifdef DEBUG
+  digitalWrite(debugPin3,HIGH); 
+  Timer1.stop();
+  #endif
   populate_MSX(0xff); // start by rising all pins 
   for (i=0;i<255;i++){
     j=0;    
@@ -144,10 +175,10 @@ void cycle_MSX_paddles(void) {
     if (i < msx_paddle_7_8  ) j |= (1<<MSX_RIGHT); 
     if (i < msx_paddle_9_10 ) j |= (1<<MSX_TRGA); 
     if (i < msx_paddle_11_12) j |= (1<<MSX_TRGB);
-//    populate_MSX(j);
     populate_MSX(j);
     if (j==0) break;  // exit right after all outputs went low
     delayMicroseconds(10);
+
     asm volatile ( "nop\n"
                    "nop\n" 
                    "nop\n" );
@@ -156,10 +187,19 @@ void cycle_MSX_paddles(void) {
     
     delayMicroseconds(50); // allow some time for Z80 to detect the end of timing 
 
+     
     populate_MSX(msx_buttons); // restore button state 
-    
-    Timer1.setPeriod(100000); // 100ms 
+    #ifdef DEBUG
+    digitalWrite(debugPin3,LOW); 
+    #endif    
+    Timer1.stop();
+    Timer1.setPeriod(200000); // 100ms 
     Timer1.restart();  
+//    TIFR1 = 0xff;  // clear any pending timer IRQ
+//    TIFR0 = 0xff;  // clear any pending timer IRQ  
+//    TIFR2 = 0xff;  // clear any pending timer IRQ  
+  //  TIFR0 |=(1<<TOV0);  // clear pending timer IRQ
+ //   TIFR2 |=(1<<TOV2);  // clear pending timer IRQ    
   }
 
 
@@ -168,9 +208,7 @@ void cycle_MSX_paddles(void) {
 //
 void do_N64() {
   uint8_t msx_buttons;
-//  setupPaddles(ON); 
-//  for (;;) {
-    
+   
     msx_buttons = 0xff; // none select
 
     if ( N64Controller.read()) {  // sample/check controller presence
@@ -268,8 +306,7 @@ void do_N64() {
             
       } // if device is known
     } // if controller.read()
-
-  
+ 
     populate_MSX(msx_buttons);
 
 }
@@ -282,5 +319,3 @@ inline void populate_MSX(uint8_t buttons) {
   MSX_PORT = buttons;
   MSX_DDR  = ~buttons;
   }
-
-
