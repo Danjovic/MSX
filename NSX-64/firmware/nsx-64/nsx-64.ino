@@ -218,89 +218,54 @@ void do_N64() {
       auto report = N64Controller.getReport();
       if (status.device!=NINTENDO_DEVICE_N64_NONE) { 
         // fill buttons
-        // Directional
+		
+        // Directional buttons (D-Pad)
         if (report.dup   ) msx_buttons &= ~(1<<MSX_UP);    // UP
         if (report.ddown ) msx_buttons &= ~(1<<MSX_DOWN);  // DOWN
         if (report.dleft ) msx_buttons &= ~(1<<MSX_LEFT);  // LEFT
         if (report.dright) msx_buttons &= ~(1<<MSX_RIGHT); // RIGHT
 
-        // Digital Equivalent
-        //  From center: up and right is positive, down and left is negative.
+		
+        // Digital Equivalent to directional buttons (Analog stick). 
+		//  From center: up and right is positive, down and left is negative.
 
-        // Don't activate UP if MSX DOWN is activated 
-        if ((msx_buttons & (1<<MSX_DOWN)) ==0) {
-          if (report.yAxis >  16 ) 
-             msx_buttons &= ~(1<<MSX_UP);    // UP
-             }
+        // Before activate UP check that DOWN is not activated
+		if ( (report.yAxis >  16 ) && (msx_buttons & (1<<MSX_DOWN ) )) msx_buttons &= ~(1<<MSX_UP    );
+        // Before activate DOWN check that UP is not activated
+		if ( (report.yAxis < -16 ) && (msx_buttons & (1<<MSX_UP   ) )) msx_buttons &= ~(1<<MSX_DOWN  );
 
-        // Don't activate DOWN if MSX UP is activated 
-        if ((msx_buttons & (1<<MSX_UP)) ==0) {
-          if (report.yAxis < -16 ) 
-             msx_buttons &= ~(1<<MSX_DOWN);  // DOWN
-             }        
-
-        // Don't activate LEFT if MSX RIGHT is activated 
-        if ((msx_buttons & (1<<MSX_RIGHT)) ==0) {
-          if (report.xAxis < -16 ) msx_buttons &= ~(1<<MSX_LEFT);  // LEFT
-             }          
-
-        // Don't activate RIGHT if MSX LEFT is activated 
-        if ((msx_buttons & (1<<MSX_LEFT)) ==0) {
-          if (report.xAxis >  16 ) 
-             msx_buttons &= ~(1<<MSX_RIGHT); // RIGHT
-             }
+        // Before activate LEFT check that RIGHT is not activated
+		if ( (report.xAxis < -16 ) && (msx_buttons & (1<<MSX_RIGHT) )) msx_buttons &= ~(1<<MSX_LEFT    );
+        // Before activate RIGHT check that LEFT is not activated
+		if ( (report.xAxis >  16 ) && (msx_buttons & (1<<MSX_LEFT ) )) msx_buttons &= ~(1<<MSX_RIGHT  );
 
 
+		
         // Trigger buttons
         if (report.a) msx_buttons &= ~(1<<MSX_TRGA);  // A
         if (report.b) msx_buttons &= ~(1<<MSX_TRGB);  // B
         if ((report.z) && autofiremod() ) msx_buttons &= ~(1<<MSX_TRGA);  // Z
 
-        // Shoulder buttons
-        // Don't activate L shoulder if RIGTH is activated 
-        if ((msx_buttons & (1<<MSX_RIGHT)) ==0) {
-          if (report.l) 
-             msx_buttons &= ~((1<<MSX_UP) | (1<<MSX_LEFT) ); // L Shoulder
-             }
+        // Shoulder buttons are mapped as upper diagonals
+        // Before activate L SHOULDER (UP+LEFT) check that RIGHT is not activated		
+		if ( (report.l) && (msx_buttons & (1<<MSX_RIGHT)) )  msx_buttons &= ~((1<<MSX_UP) | (1<<MSX_LEFT) );		
+        // Before activate R SHOULDER (UP+RIGHT) check that LEFT is not activated		
+		if ( (report.r) && (msx_buttons & (1<<MSX_LEFT )) )  msx_buttons &= ~((1<<MSX_UP) | (1<<MSX_RIGHT) );
 
-        // Don't activate R shoulder if LEFT is activated 
-        if ((msx_buttons & (1<<MSX_LEFT)) ==0) {
-          if (report.r)
-             msx_buttons &= ~((1<<MSX_UP) | (1<<MSX_RIGHT) ); // R Shoulder
-             }
-
-        // C buttons
-        // Don't activate C UP if MSX DOWN is activated 
-        if ((msx_buttons & (1<<MSX_DOWN)) ==0) {
-          if (report.cup) 
-             msx_buttons &= ~((1<<MSX_TRGA) | (1<<MSX_UP) ); // C UP
-             }
-
-        // Don't activate C DOWN if MSX UP is activated 
-        if ((msx_buttons & (1<<MSX_UP)) ==0) {
-          if (report.cdown) 
-             msx_buttons &= ~((1<<MSX_TRGA) | (1<<MSX_DOWN) ); // C DOWN
-             }
-
-        // Don't activate C LEFT if MSX RIGHT is activated 
-        if ((msx_buttons & (1<<MSX_RIGHT)) ==0) {
-          if (report.cleft) 
-             msx_buttons &= ~((1<<MSX_TRGA) | (1<<MSX_LEFT) ); // C LEFT
-             }
-
-        // Don't activate C RIGHT if MSX LEFT is activated 
-        if ((msx_buttons & (1<<MSX_LEFT)) ==0) {
-          if (report.cright) 
-             msx_buttons &= ~((1<<MSX_TRGA) | (1<<MSX_RIGHT) ); // C RIGHT
-             }
-
+        // C buttons are mapped as Trigger A plus directionals
+		// Before activate C-UP (TRG A + UP) check that DOWN is not activated	
+		if ( (report.cup  ) &&  (msx_buttons & (1<<MSX_DOWN )) ) msx_buttons &= ~((1<<MSX_TRGA) | (1<<MSX_UP) );
+		// Before activate C-DOWN (TRG A + DOWN) check that UP is not activated	
+		if ( (report.cdown ) &&  (msx_buttons & (1<<MSX_UP   )) ) msx_buttons &= ~((1<<MSX_TRGA) | (1<<MSX_DOWN) );
+		// Before activate C-LEFT (TRG A + LEFT) check that RIGHT is not activated	
+		if ( (report.cleft ) &&  (msx_buttons & (1<<MSX_RIGHT)) ) msx_buttons &= ~((1<<MSX_TRGA) | (1<<MSX_LEFT) );		
+		// Before activate C-RIGHT (TRG A + RIGHT) check that LEFT is not activated	
+		if ( (report.cright) &&  (msx_buttons & (1<<MSX_LEFT )) ) msx_buttons &= ~((1<<MSX_TRGA) | (1<<MSX_RIGHT) );	
 
         // START button
-        // Don't activate START if either LEFT or RIGTH are activated  
-        if (msx_buttons & ((1<<MSX_LEFT) | (1<<MSX_RIGHT)) ==0) {
-          if (report.start) 
-             msx_buttons &= ~((1<<MSX_LEFT) | (1<<MSX_RIGHT) ); // start
-          } 
+        // Before activate START (LEFT + RIGHT) check neither LEFT nor RIGTH are activated
+		if ( (report.start) && ( msx_buttons & ((1<<MSX_LEFT)|(1<<MSX_RIGHT)) ) )  msx_buttons &= ~((1<<MSX_LEFT) | (1<<MSX_RIGHT) );
+		
 
         // fill Analog values (convert to unsigned) 
         msx_paddle_5_6 = (uint8_t) (128+report.xAxis);
