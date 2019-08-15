@@ -59,13 +59,16 @@
 #define N64_Pin 7   // PD7
 #define autofiremod() ((TCNT1H & 0x03)==0) // turn on/off at 7.62Hz (16MHz/1024) / 2^(3+8)
 
+#define _10ms 2499     // OCR1 values for timeout
+#define _100ms 24999
+
 ///////////////////////////////////////////////////////////////////////////////
 //  Libraries
 //
-#include <TimerOne.h>
+//#include <TimerOne.h>
 #include <avr/sleep.h>
 #include <avr/power.h>
-
+#include <avr/interrupt.h>
 #include "Nintendo.h"
 
 
@@ -97,9 +100,12 @@ void setup() {
   pinMode(MSX_PULSE,INPUT_PULLUP);
   populate_MSX(0xff); 
   attachInterrupt(digitalPinToInterrupt(MSX_PULSE), cycle_MSX_paddles, RISING);
-  Timer1.initialize(10000);  // 10ms
-//  Timer1.restart();
-  Timer1.attachInterrupt(timeout,10000); 
+
+  
+  
+  // Setup Timer 2 used for autofire modulator
+  
+  
 
   #ifdef DEBUG
   pinMode(debugPin,OUTPUT);
@@ -110,8 +116,11 @@ void setup() {
   digitalWrite(debugPin3,LOW);  
 
   #endif
+  
+  // Setup Timer 1 used for wake up processor, and enable interrupts 
+  setTimer1(_10ms);    
 
-  sei();
+ // sei();
 
 }
 
@@ -144,19 +153,36 @@ void loop() {
 // 
 
 ///////////////////////////////////////////////////////////////////
-// Timer 1 Interrupt handler
+// Timer 1 CTC Interrupt handler
 //
-void timeout()
+//void timeout()
+
+ISR(TIMER1_COMPA_vect)
 {
- // Timer1.stop();
-  Timer1.setPeriod(10000); // 10ms
- // Timer1.restart(); 
+  setTimer1(_10ms); 
   #ifdef DEBUG
   digitalWrite(debugPin,HIGH);
   digitalWrite(debugPin,LOW);
   #endif
 }
 
+
+///////////////////////////////////////////////////////////////////
+// Timer 1 timeout configuration
+//
+inline void setTimer1 (uint16_t overflowTicks) {
+	cli(); // disable interrupts
+	TCCR1A = 0; 
+	TCCR1B = 0;
+	TCNT1  = 0; // initialize counter value to 0
+	OCR1A = overflowTicks; // set compare register 
+
+	TCCR1B |= (1 << WGM12);	                 // CTC mode
+	TCCR1B |= (0<<CS12)|(1<<CS11)|(1<<CS10); // prescaler = 64
+	TIMSK1 |= (1 << OCIE1A);                 // ISR Timer1/Compare
+	
+	sei(); // enable interrupts
+	}
 
 
 ///////////////////////////////////////////////////////////////////
@@ -167,7 +193,6 @@ void cycle_MSX_paddles(void) {
   uint8_t msx_buttons = ~MSX_DDR; // save button state
   #ifdef DEBUG
   digitalWrite(debugPin3,HIGH); 
-  Timer1.stop();
   #endif
   populate_MSX(0xff); // start by rising all pins 
   for (i=0;i<255;i++){
@@ -195,12 +220,7 @@ void cycle_MSX_paddles(void) {
     #ifdef DEBUG
     digitalWrite(debugPin3,LOW); 
     #endif    
-    Timer1.stop();
-    Timer1.setPeriod(100000); // 100ms 
-    Timer1.restart();  
-//    TIFR1 = 0xff;  // clear any pending timer IRQ
-//    TIFR0 = 0xff;  // clear any pending timer IRQ  
-//    TIFR2 = 0xff;  // clear any pending timer IRQ  
+    setTimer1(_100ms); 
 
   }
 
