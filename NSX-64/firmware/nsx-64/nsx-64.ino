@@ -36,7 +36,7 @@
  * 
 */
 
-#define DEBUG
+//#define DEBUG
 #define debugPin 4
 #define debugPin2 5
 #define debugPin3 6
@@ -57,9 +57,10 @@
 #define MSX_PULSE 2 // PD2/INT0 Arduino pin
 
 #define N64_Pin 7   // PD7
-#define autofiremod() ((TCNT1H & 0x03)==0) // turn on/off at 7.62Hz (16MHz/1024) / 2^(3+8)
+
 
 #define _10ms 2499     // OCR1 values for timeout
+#define _63ms 15750    // used by autofire modulation
 #define _100ms 24999
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -84,7 +85,8 @@ static volatile uint8_t msx_paddle_7_8   = 0; // Pin 1 - RIGHT
 static volatile uint8_t msx_paddle_9_10  = 0; // Pin 1 - TRIGGER A   
 static volatile uint8_t msx_paddle_11_12 = 0; // Pin 1 - TRIGGER B  
 
-
+static volatile uint32_t elapsedTime = 0;
+static uint8_t autoFireMod = 0;
 ///////////////////////////////////////////////////////////////////
 // 
 //  ___      _             
@@ -160,6 +162,7 @@ void loop() {
 ISR(TIMER1_COMPA_vect)
 {
   setTimer1(_10ms); 
+  elapsedTime += 2500;  // add 2500 counts for each 10ms interrupt
   #ifdef DEBUG
   digitalWrite(debugPin,HIGH);
   digitalWrite(debugPin,LOW);
@@ -219,7 +222,8 @@ void cycle_MSX_paddles(void) {
     populate_MSX(msx_buttons); // restore button state 
     #ifdef DEBUG
     digitalWrite(debugPin3,LOW); 
-    #endif    
+    #endif  
+    elapsedTime+=TCNT1;  // Add elapsed time since last interrupt  
     setTimer1(_100ms); 
 
   }
@@ -230,6 +234,14 @@ void cycle_MSX_paddles(void) {
 //
 void do_N64() {
   uint8_t msx_buttons;
+
+    //process autofire 
+    cli ();
+       if (elapsedTime > _63ms ) {
+           autoFireMod ^= 0xff; // toggle autofire state
+           elapsedTime = elapsedTime % _63ms;
+        }
+    sei ();
 
     msx_buttons = 0xff; // none select
 
@@ -264,7 +276,7 @@ void do_N64() {
         // Trigger buttons
         if (report.a) msx_buttons &= ~(1<<MSX_TRGA);  // A
         if (report.b) msx_buttons &= ~(1<<MSX_TRGB);  // B
-        if ((report.z) && autofiremod() ) msx_buttons &= ~(1<<MSX_TRGA);  // Z
+        if ((report.z) && (autoFireMod) ) msx_buttons &= ~(1<<MSX_TRGA);  // Z
 
         // Shoulder buttons are mapped as upper diagonals
         // Before activate L SHOULDER (UP+LEFT) check that RIGHT is not activated		
