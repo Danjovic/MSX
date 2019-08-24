@@ -1,0 +1,37 @@
+
+
+
+Placa de 80 colunas para a porta de Joystick
+
+
+Este projeto é baseado no terminal de vídeo com AVR desenvolvido por Daryl Rictor . O projeto inicialmente utilizava uma interface paralela de 8 bits, mas foi aperfeiçoado pelo Grant Searle que adicionou novos modos de vídeo e outras funcionalidades, entre elas inclusive uma interface de 4 bits. Posteriormente David Curran (Tynemouth Softare) implementou a comunicação I2C, na qual o presente projeto se baseia. 
+Minha contribuição para o projeto é a compatibilização do circuito com a norma RS170 que determina a correta amplitude e impedância de um sinal de vídeo composto (como descrito neste outro artigo aqui).
+
+A placa de circuito impresso foi projetada para ser encaixada diretamente na saída de joystick e tem apenas 1 polegada quadrada de diâmetro.
+
+
+
+Novas rotinas J2C
+
+A placa pode ser usada a partir do Basic, bastanto instalar uma rotina que captura a saída da função LPRINT e redireciona para a porta de Joystick sob o protocolo I2C, mas a fim de otimizar a velocidade de acesso a partir de programas em linguagem de máquina uma nova biblioeca de acesso foi escrita tomando por base o funcionamento da biblioteca wire do Arduino, que possui um buffer de entrada/saída e só lê/escreve efetivamente ao se chamar a função que encerra a transmissão.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
