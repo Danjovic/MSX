@@ -15596,7 +15596,7 @@ Source: http://www.bourns.com/data/global/PDFs/3223.PDF</description>
 <part name="GND11" library="supply1" deviceset="GND" device=""/>
 <part name="P+8" library="supply1" deviceset="VCC" device=""/>
 <part name="C4" library="rcl" deviceset="CPOL-EU" device="E2-4" value="1uf"/>
-<part name="C5" library="rcl" deviceset="C-EU" device="050-024X044" value="1k"/>
+<part name="C5" library="rcl" deviceset="C-EU" device="050-024X044" value="100nf"/>
 <part name="C6" library="rcl" deviceset="C-EU" device="050-024X044" value="100nf"/>
 <part name="C8" library="rcl" deviceset="C-EU" device="050-024X044" value="100nf"/>
 <part name="C10" library="rcl" deviceset="CPOL-EU" device="E2-4" value="1uf"/>
@@ -15689,6 +15689,8 @@ Source: http://www.bourns.com/data/global/PDFs/3223.PDF</description>
 <text x="139.7" y="157.48" size="1.9304" layer="94" ratio="6">Shift Register</text>
 <text x="163.068" y="19.558" size="2.1844" layer="94">VAUS ARKANOID PADDLE FOR MSX</text>
 <text x="172.72" y="10.16" size="2.1844" layer="94">Redrawn by Danjovic</text>
+<text x="180.34" y="66.04" size="1.778" layer="94" font="vector">For R5 = 100K use R1 (fixed) at 2k7</text>
+<text x="180.34" y="60.96" size="1.778" layer="94" font="vector">or let alone R1 and use a 4k7 trimpot at R7</text>
 </plain>
 <instances>
 <instance part="IC1" gate="A" x="106.68" y="137.16"/>
