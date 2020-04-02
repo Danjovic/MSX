@@ -202,4 +202,6 @@ ISR(INT0_vect) {
   }
   // pre-shift next bit
   shiftRegister <<= 1;
+        
+  GIFR |= (1<<PCIF );   // <- De-glitch in a single instruction!      
 }
