@@ -14844,8 +14844,8 @@ Source: http://www.diodes.com/datasheets/ds23001.pdf</description>
 <attribute name="NAME" x="36.83" y="62.4586" size="1.778" layer="95"/>
 <attribute name="VALUE" x="36.83" y="60.198" size="1.778" layer="96"/>
 </instance>
-<instance part="R2" gate="G$1" x="142.24" y="43.18"/>
-<instance part="LED1" gate="G$1" x="134.62" y="43.18" rot="R270"/>
+<instance part="R2" gate="G$1" x="144.78" y="53.34"/>
+<instance part="LED1" gate="G$1" x="137.16" y="53.34" rot="R270"/>
 <instance part="S1" gate="1" x="99.06" y="22.86" rot="MR180"/>
 <instance part="D1" gate="G$1" x="30.48" y="53.34" rot="R180"/>
 <instance part="D2" gate="G$1" x="30.48" y="48.26" rot="R180"/>
@@ -14853,8 +14853,8 @@ Source: http://www.diodes.com/datasheets/ds23001.pdf</description>
 <instance part="D4" gate="G$1" x="30.48" y="38.1" rot="R180"/>
 <instance part="D5" gate="G$1" x="30.48" y="33.02" rot="R180"/>
 <instance part="P+3" gate="VCC" x="35.56" y="68.58" rot="MR0"/>
-<instance part="P+4" gate="VCC" x="149.86" y="43.18" rot="MR90"/>
-<instance part="P+5" gate="VCC" x="99.06" y="53.34" rot="MR270"/>
+<instance part="P+4" gate="VCC" x="152.4" y="53.34" rot="MR90"/>
+<instance part="P+5" gate="VCC" x="91.44" y="43.18" rot="R90"/>
 <instance part="GND3" gate="1" x="99.06" y="12.7"/>
 <instance part="P+6" gate="VCC" x="116.84" y="15.24" rot="MR270"/>
 </instances>
@@ -15482,11 +15482,6 @@ Source: http://www.diodes.com/datasheets/ds23001.pdf</description>
 <pinref part="P+3" gate="VCC" pin="VCC"/>
 </segment>
 <segment>
-<pinref part="IC5" gate="A" pin="PRE"/>
-<pinref part="P+5" gate="VCC" pin="VCC"/>
-<wire x1="101.6" y1="53.34" x2="104.14" y2="53.34" width="0.1524" layer="91"/>
-</segment>
-<segment>
 <pinref part="P+6" gate="VCC" pin="VCC"/>
 <pinref part="IC5" gate="B" pin="CLR"/>
 <wire x1="119.38" y1="15.24" x2="121.92" y2="15.24" width="0.1524" layer="91"/>
@@ -15507,6 +15502,11 @@ Source: http://www.diodes.com/datasheets/ds23001.pdf</description>
 <segment>
 <pinref part="R2" gate="G$1" pin="2"/>
 <pinref part="P+4" gate="VCC" pin="VCC"/>
+</segment>
+<segment>
+<pinref part="P+5" gate="VCC" pin="VCC"/>
+<pinref part="IC5" gate="A" pin="CLR"/>
+<wire x1="93.98" y1="43.18" x2="104.14" y2="43.18" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="SW1-2" class="0">
@@ -15583,20 +15583,21 @@ Source: http://www.diodes.com/datasheets/ds23001.pdf</description>
 <label x="231.14" y="121.92" size="1.27" layer="95" xref="yes"/>
 </segment>
 <segment>
-<pinref part="IC5" gate="A" pin="CLR"/>
-<wire x1="104.14" y1="43.18" x2="99.06" y2="43.18" width="0.1524" layer="91"/>
-<wire x1="99.06" y1="43.18" x2="99.06" y2="33.02" width="0.1524" layer="91"/>
 <wire x1="99.06" y1="33.02" x2="109.22" y2="33.02" width="0.1524" layer="91"/>
 <label x="109.22" y="33.02" size="1.27" layer="95" xref="yes"/>
 <pinref part="S1" gate="1" pin="P"/>
 <wire x1="99.06" y1="27.94" x2="99.06" y2="33.02" width="0.1524" layer="91"/>
 <junction x="99.06" y="33.02"/>
+<pinref part="IC5" gate="A" pin="PRE"/>
+<wire x1="104.14" y1="53.34" x2="99.06" y2="53.34" width="0.1524" layer="91"/>
+<wire x1="99.06" y1="53.34" x2="99.06" y2="33.02" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$1" class="0">
 <segment>
-<pinref part="IC5" gate="A" pin="!Q"/>
 <pinref part="LED1" gate="G$1" pin="C"/>
+<pinref part="IC5" gate="A" pin="Q"/>
+<wire x1="132.08" y1="53.34" x2="129.54" y2="53.34" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$3" class="0">
