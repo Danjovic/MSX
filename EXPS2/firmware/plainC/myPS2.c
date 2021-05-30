@@ -11,12 +11,12 @@
 #define DAT_DDR  DDRB
 #define DAT_PIN  PINB
 #define DAT_PORT PORTB
-#define DAT_BIT  0
+#define DAT_BIT  1
 
 #define CLK_DDR  DDRB
 #define CLK_PIN  PINB
 #define CLK_PORT PORTB
-#define CLK_BIT  1
+#define CLK_BIT  0
 
 #define dropDAT()    do { DAT_DDR  |=  (1 << DAT_BIT); DAT_PORT &= ~(1 << DAT_BIT); } while(0)
 #define dropCLK()    do { CLK_DDR  |=  (1 << CLK_BIT); CLK_PORT &= ~(1 << CLK_BIT); } while(0)
