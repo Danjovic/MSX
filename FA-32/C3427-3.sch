@@ -16424,6 +16424,114 @@ Source: ERNI-D-Sub-Conmnectors-d.pdf / www.erni.com</description>
 </deviceset>
 </devicesets>
 </library>
+<library name="AudioJack">
+<packages>
+<package name="PJ325">
+<description>PJ325 Series</description>
+<wire x1="0" y1="3" x2="-3.5" y2="3" width="0.1524" layer="51"/>
+<wire x1="-3.5" y1="-3" x2="0" y2="-3" width="0.1524" layer="51"/>
+<wire x1="-3.5" y1="3" x2="-4" y2="2.54" width="0.1524" layer="51"/>
+<wire x1="-3.5" y1="-3" x2="-4" y2="-2.54" width="0.1524" layer="51"/>
+<wire x1="-4" y1="-2.54" x2="-4" y2="2.54" width="0.1524" layer="51"/>
+<wire x1="-3.5" y1="-3" x2="-3.5" y2="3" width="0.1524" layer="51"/>
+<pad name="4" x="13" y="-1" drill="0.8" diameter="1.5" shape="long" rot="R270"/>
+<pad name="5" x="3.6" y="1" drill="0.8" diameter="1.5" shape="long" rot="R270"/>
+<pad name="1" x="1.2" y="-1" drill="0.8" diameter="1.5" shape="long" rot="R270"/>
+<pad name="3" x="9.3" y="1" drill="0.8" diameter="1.5" shape="long" rot="R270"/>
+<pad name="2" x="7.3" y="-1" drill="0.8" diameter="1.5" shape="long" rot="R270"/>
+<text x="-2.16" y="-1.731" size="1.016" layer="51" ratio="10" rot="R90">3,5mm</text>
+<text x="0.9" y="-2.5" size="1.016" layer="51" ratio="10" rot="R180">1</text>
+<text x="6.869" y="-2.5" size="1.016" layer="51" ratio="10" rot="R180">2</text>
+<text x="8.516" y="2.23" size="1.016" layer="51" ratio="10" rot="R180">3</text>
+<text x="12.429" y="-2.5" size="1.016" layer="51" ratio="10" rot="R180">4</text>
+<text x="2.767" y="2.199" size="1.016" layer="51" ratio="10" rot="R180">5</text>
+<text x="13.525" y="-5.54" size="1.27" layer="25" ratio="10" rot="R180">&gt;NAME</text>
+<text x="7.08" y="4.94" size="1.27" layer="27" ratio="10" rot="R180">&gt;VALUE</text>
+<wire x1="0.8" y1="0" x2="1.6" y2="0" width="0" layer="46"/>
+<wire x1="1.6" y1="0" x2="1.6" y2="-2" width="0" layer="46"/>
+<wire x1="1.6" y1="-2" x2="0.8" y2="-2" width="0" layer="46"/>
+<wire x1="0.8" y1="-2" x2="0.8" y2="0" width="0" layer="46"/>
+<wire x1="0" y1="3.2" x2="0" y2="-4.9" width="0.1524" layer="21"/>
+<wire x1="14.1" y1="3.2" x2="14.1" y2="-4.9" width="0.1524" layer="21"/>
+<wire x1="0" y1="3.2" x2="14.1" y2="3.2" width="0.1524" layer="21"/>
+<wire x1="0" y1="-4.9" x2="14.1" y2="-4.9" width="0.1524" layer="21"/>
+<wire x1="3.2" y1="2" x2="4" y2="2" width="0" layer="46"/>
+<wire x1="4" y1="2" x2="4" y2="0" width="0" layer="46"/>
+<wire x1="4" y1="0" x2="3.2" y2="0" width="0" layer="46"/>
+<wire x1="3.2" y1="0" x2="3.2" y2="2" width="0" layer="46"/>
+<wire x1="6.9" y1="0" x2="7.7" y2="0" width="0" layer="46"/>
+<wire x1="7.7" y1="0" x2="7.7" y2="-2" width="0" layer="46"/>
+<wire x1="7.7" y1="-2" x2="6.9" y2="-2" width="0" layer="46"/>
+<wire x1="6.9" y1="-2" x2="6.9" y2="0" width="0" layer="46"/>
+<wire x1="8.9" y1="2" x2="9.7" y2="2" width="0" layer="46"/>
+<wire x1="9.7" y1="2" x2="9.7" y2="0" width="0" layer="46"/>
+<wire x1="9.7" y1="0" x2="8.9" y2="0" width="0" layer="46"/>
+<wire x1="8.9" y1="0" x2="8.9" y2="2" width="0" layer="46"/>
+<wire x1="12.6" y1="0" x2="13.4" y2="0" width="0" layer="46"/>
+<wire x1="13.4" y1="0" x2="13.4" y2="-2" width="0" layer="46"/>
+<wire x1="13.4" y1="-2" x2="12.6" y2="-2" width="0" layer="46"/>
+<wire x1="12.6" y1="-2" x2="12.6" y2="0" width="0" layer="46"/>
+</package>
+</packages>
+<symbols>
+<symbol name="JACK_ST_SW">
+<wire x1="1.27" y1="-5.08" x2="2.54" y2="-5.08" width="0.254" layer="94"/>
+<wire x1="2.54" y1="-5.08" x2="2.54" y2="-7.62" width="0.1524" layer="94"/>
+<wire x1="2.54" y1="-7.62" x2="-10.16" y2="-7.62" width="0.1524" layer="94"/>
+<wire x1="-0.635" y1="-3.175" x2="-1.27" y2="-2.54" width="0.254" layer="94"/>
+<wire x1="-1.27" y1="-2.54" x2="-3.81" y2="-5.08" width="0.254" layer="94"/>
+<wire x1="-10.16" y1="-2.54" x2="-7.62" y2="-2.54" width="0.1524" layer="94"/>
+<wire x1="-7.62" y1="-2.54" x2="-7.62" y2="-4.445" width="0.1524" layer="94"/>
+<wire x1="-7.62" y1="-4.445" x2="-8.001" y2="-3.429" width="0.1524" layer="94"/>
+<wire x1="-8.001" y1="-3.429" x2="-7.239" y2="-3.429" width="0.1524" layer="94"/>
+<wire x1="-7.239" y1="-3.429" x2="-7.62" y2="-4.445" width="0.1524" layer="94"/>
+<wire x1="-10.16" y1="0" x2="-7.62" y2="0" width="0.1524" layer="94"/>
+<wire x1="-7.62" y1="0" x2="-7.62" y2="1.905" width="0.1524" layer="94"/>
+<wire x1="-7.62" y1="1.905" x2="-8.001" y2="0.762" width="0.1524" layer="94"/>
+<wire x1="-8.001" y1="0.762" x2="-7.239" y2="0.762" width="0.1524" layer="94"/>
+<wire x1="-7.239" y1="0.762" x2="-7.62" y2="1.905" width="0.1524" layer="94"/>
+<wire x1="-6.35" y1="2.54" x2="-3.81" y2="0" width="0.254" layer="94"/>
+<wire x1="-3.81" y1="0" x2="-3.175" y2="0.635" width="0.254" layer="94"/>
+<wire x1="1.27" y1="-5.08" x2="1.27" y2="2.54" width="0.254" layer="94"/>
+<wire x1="2.54" y1="-5.08" x2="3.81" y2="-5.08" width="0.254" layer="94"/>
+<wire x1="1.27" y1="2.54" x2="3.81" y2="2.54" width="0.254" layer="94"/>
+<wire x1="-10.16" y1="2.54" x2="-6.35" y2="2.54" width="0.254" layer="94"/>
+<wire x1="-10.16" y1="-5.08" x2="-3.81" y2="-5.08" width="0.254" layer="94"/>
+<wire x1="3.81" y1="-5.08" x2="3.81" y2="2.54" width="0.254" layer="94"/>
+<circle x="-10.16" y="-5.08" radius="0.127" width="0.4064" layer="94"/>
+<circle x="-10.16" y="2.54" radius="0.127" width="0.4064" layer="94"/>
+<text x="-7.62" y="3.81" size="1.778" layer="95">&gt;NAME</text>
+<text x="-7.62" y="-10.16" size="1.778" layer="96">&gt;VALUE</text>
+<pin name="5" x="-12.7" y="2.54" visible="pad" length="short" direction="pas"/>
+<pin name="4" x="-12.7" y="0" visible="pad" length="short" direction="pas"/>
+<pin name="3" x="-12.7" y="-5.08" visible="pad" length="short" direction="pas"/>
+<pin name="2" x="-12.7" y="-2.54" visible="pad" length="short" direction="pas"/>
+<pin name="1" x="-12.7" y="-7.62" visible="pad" length="short" direction="pas"/>
+</symbol>
+</symbols>
+<devicesets>
+<deviceset name="PJ-325">
+<description>Stereo Jack With Switches</description>
+<gates>
+<gate name="G$1" symbol="JACK_ST_SW" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="PJ325">
+<connects>
+<connect gate="G$1" pin="1" pad="1"/>
+<connect gate="G$1" pin="2" pad="2"/>
+<connect gate="G$1" pin="3" pad="3"/>
+<connect gate="G$1" pin="4" pad="4"/>
+<connect gate="G$1" pin="5" pad="5"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+</devicesets>
+</library>
 </libraries>
 <attributes>
 </attributes>
@@ -16509,10 +16617,11 @@ Source: ERNI-D-Sub-Conmnectors-d.pdf / www.erni.com</description>
 <part name="J1" library="Jack-PJ" deviceset="PJ-" device="301"/>
 <part name="J2" library="Jack-PJ" deviceset="PJ-" device="301"/>
 <part name="J3" library="Jack-PJ" deviceset="PJ-" device="201"/>
-<part name="K2" library="con-subd" deviceset="M09HP" device=""/>
+<part name="J4" library="con-subd" deviceset="M09HP" device=""/>
 <part name="GND15" library="supply1" deviceset="GND" device=""/>
 <part name="T1(*)" library="transistor-npn" deviceset="BC338*" device=""/>
 <part name="K1(*)" library="relay" deviceset="351" device=""/>
+<part name="J12(*)" library="AudioJack" deviceset="PJ-325" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -16521,7 +16630,7 @@ Source: ERNI-D-Sub-Conmnectors-d.pdf / www.erni.com</description>
 <wire x1="68.58" y1="63.5" x2="96.52" y2="63.5" width="0.1524" layer="97" style="shortdash"/>
 <text x="218.44" y="20.32" size="2.54" layer="94" font="vector">Danjovic 2021</text>
 <text x="163.83" y="16.002" size="5.08" layer="94" font="vector" ratio="14">CASIO FA-32</text>
-<wire x1="38.1" y1="20.32" x2="66.04" y2="20.32" width="0.1524" layer="97" style="shortdash"/>
+<wire x1="43.18" y1="17.78" x2="71.12" y2="17.78" width="0.1524" layer="97" style="shortdash"/>
 </plain>
 <instances>
 <instance part="C1" gate="G$1" x="43.18" y="137.16" smashed="yes" rot="R180">
@@ -16787,17 +16896,18 @@ Source: ERNI-D-Sub-Conmnectors-d.pdf / www.erni.com</description>
 <instance part="J1" gate="G$1" x="15.24" y="134.62" rot="MR180"/>
 <instance part="J2" gate="G$1" x="15.24" y="114.3"/>
 <instance part="J3" gate="G$1" x="15.24" y="55.88" rot="MR180"/>
-<instance part="K2" gate="G$1" x="215.9" y="91.44" rot="R90"/>
+<instance part="J4" gate="G$1" x="215.9" y="91.44" rot="R90"/>
 <instance part="GND15" gate="1" x="208.28" y="106.68" smashed="yes">
 <attribute name="VALUE" x="205.74" y="104.14" size="1.778" layer="96"/>
 </instance>
-<instance part="T1(*)" gate="G$1" x="93.98" y="20.32" smashed="yes" rot="MR0">
-<attribute name="NAME" x="88.9" y="20.32" size="1.778" layer="95" rot="MR0"/>
-<attribute name="VALUE" x="88.9" y="17.78" size="1.778" layer="96" rot="MR0"/>
+<instance part="T1(*)" gate="G$1" x="99.06" y="17.78" smashed="yes" rot="MR0">
+<attribute name="NAME" x="93.98" y="17.78" size="1.778" layer="95" rot="MR0"/>
+<attribute name="VALUE" x="93.98" y="15.24" size="1.778" layer="96" rot="MR0"/>
 </instance>
-<instance part="K1(*)" gate="1" x="71.12" y="20.32"/>
-<instance part="K1(*)" gate="2" x="35.56" y="17.78"/>
-<instance part="K1(*)" gate="3" x="55.88" y="17.78"/>
+<instance part="K1(*)" gate="1" x="76.2" y="17.78"/>
+<instance part="K1(*)" gate="2" x="40.64" y="15.24"/>
+<instance part="K1(*)" gate="3" x="60.96" y="15.24"/>
+<instance part="J12(*)" gate="G$1" x="15.24" y="20.32" rot="MR0"/>
 </instances>
 <busses>
 </busses>
@@ -16814,6 +16924,10 @@ Source: ERNI-D-Sub-Conmnectors-d.pdf / www.erni.com</description>
 <pinref part="J1" gate="G$1" pin="T"/>
 <wire x1="22.86" y1="137.16" x2="35.56" y2="137.16" width="0.1524" layer="91"/>
 <label x="27.94" y="137.16" size="1.778" layer="95"/>
+</segment>
+<segment>
+<wire x1="27.94" y1="22.86" x2="30.48" y2="22.86" width="0.1524" layer="91"/>
+<pinref part="J12(*)" gate="G$1" pin="5"/>
 </segment>
 </net>
 <net name="PE" class="0">
@@ -16844,9 +16958,9 @@ Source: ERNI-D-Sub-Conmnectors-d.pdf / www.erni.com</description>
 </segment>
 <segment>
 <pinref part="PE7" gate="M" pin="PE"/>
-<pinref part="K2" gate="G$1" pin="G1"/>
+<pinref part="J4" gate="G$1" pin="G1"/>
 <wire x1="208.28" y1="83.82" x2="208.28" y2="60.96" width="0.1524" layer="91"/>
-<pinref part="K2" gate="G$1" pin="G2"/>
+<pinref part="J4" gate="G$1" pin="G2"/>
 <wire x1="208.28" y1="60.96" x2="208.28" y2="58.42" width="0.1524" layer="91"/>
 <wire x1="223.52" y1="83.82" x2="223.52" y2="60.96" width="0.1524" layer="91"/>
 <wire x1="223.52" y1="60.96" x2="208.28" y2="60.96" width="0.1524" layer="91"/>
@@ -16888,14 +17002,24 @@ Source: ERNI-D-Sub-Conmnectors-d.pdf / www.erni.com</description>
 <wire x1="50.8" y1="124.46" x2="50.8" y2="121.92" width="0.1524" layer="91"/>
 <junction x="43.18" y="124.46"/>
 <pinref part="J2" gate="G$1" pin="R"/>
-<wire x1="22.86" y1="116.84" x2="35.56" y2="116.84" width="0.1524" layer="91"/>
+<wire x1="22.86" y1="116.84" x2="25.4" y2="116.84" width="0.1524" layer="91"/>
+<wire x1="25.4" y1="116.84" x2="35.56" y2="116.84" width="0.1524" layer="91"/>
 <wire x1="35.56" y1="116.84" x2="35.56" y2="124.46" width="0.1524" layer="91"/>
 <junction x="35.56" y="124.46"/>
 <pinref part="J1" gate="G$1" pin="R"/>
-<wire x1="22.86" y1="132.08" x2="35.56" y2="132.08" width="0.1524" layer="91"/>
+<wire x1="22.86" y1="132.08" x2="25.4" y2="132.08" width="0.1524" layer="91"/>
+<wire x1="25.4" y1="132.08" x2="35.56" y2="132.08" width="0.1524" layer="91"/>
 <wire x1="35.56" y1="132.08" x2="35.56" y2="124.46" width="0.1524" layer="91"/>
 <label x="27.94" y="116.84" size="1.778" layer="95"/>
 <label x="27.94" y="132.08" size="1.778" layer="95"/>
+<pinref part="J2" gate="G$1" pin="C"/>
+<wire x1="22.86" y1="114.3" x2="25.4" y2="114.3" width="0.1524" layer="91"/>
+<wire x1="25.4" y1="114.3" x2="25.4" y2="116.84" width="0.1524" layer="91"/>
+<junction x="25.4" y="116.84"/>
+<pinref part="J1" gate="G$1" pin="C"/>
+<wire x1="22.86" y1="134.62" x2="25.4" y2="134.62" width="0.1524" layer="91"/>
+<wire x1="25.4" y1="134.62" x2="25.4" y2="132.08" width="0.1524" layer="91"/>
+<junction x="25.4" y="132.08"/>
 </segment>
 <segment>
 <pinref part="C6" gate="G$1" pin="1"/>
@@ -16923,7 +17047,7 @@ Source: ERNI-D-Sub-Conmnectors-d.pdf / www.erni.com</description>
 <junction x="170.18" y="71.12"/>
 <label x="193.04" y="88.9" size="1.778" layer="95"/>
 <wire x1="170.18" y1="71.12" x2="215.9" y2="71.12" width="0.1524" layer="91"/>
-<pinref part="K2" gate="G$1" pin="8"/>
+<pinref part="J4" gate="G$1" pin="8"/>
 <wire x1="215.9" y1="83.82" x2="215.9" y2="71.12" width="0.1524" layer="91"/>
 </segment>
 <segment>
@@ -16970,15 +17094,27 @@ Source: ERNI-D-Sub-Conmnectors-d.pdf / www.erni.com</description>
 <pinref part="GND14" gate="1" pin="GND"/>
 </segment>
 <segment>
-<pinref part="K2" gate="G$1" pin="3"/>
+<pinref part="J4" gate="G$1" pin="3"/>
 <wire x1="215.9" y1="99.06" x2="215.9" y2="111.76" width="0.1524" layer="91"/>
 <wire x1="215.9" y1="111.76" x2="208.28" y2="111.76" width="0.1524" layer="91"/>
 <wire x1="208.28" y1="111.76" x2="208.28" y2="109.22" width="0.1524" layer="91"/>
 <pinref part="GND15" gate="1" pin="GND"/>
 </segment>
 <segment>
-<wire x1="91.44" y1="12.7" x2="91.44" y2="15.24" width="0.1524" layer="91"/>
+<wire x1="96.52" y1="10.16" x2="96.52" y2="12.7" width="0.1524" layer="91"/>
 <pinref part="T1(*)" gate="G$1" pin="E"/>
+</segment>
+<segment>
+<wire x1="27.94" y1="12.7" x2="30.48" y2="12.7" width="0.1524" layer="91"/>
+<pinref part="J12(*)" gate="G$1" pin="1"/>
+</segment>
+<segment>
+<wire x1="27.94" y1="17.78" x2="30.48" y2="17.78" width="0.1524" layer="91"/>
+<pinref part="J12(*)" gate="G$1" pin="2"/>
+</segment>
+<segment>
+<wire x1="27.94" y1="20.32" x2="30.48" y2="20.32" width="0.1524" layer="91"/>
+<pinref part="J12(*)" gate="G$1" pin="4"/>
 </segment>
 </net>
 <net name="N$2" class="0">
@@ -17031,6 +17167,10 @@ Source: ERNI-D-Sub-Conmnectors-d.pdf / www.erni.com</description>
 <wire x1="22.86" y1="111.76" x2="35.56" y2="111.76" width="0.1524" layer="91"/>
 <label x="27.94" y="111.76" size="1.778" layer="95"/>
 </segment>
+<segment>
+<wire x1="30.48" y1="15.24" x2="27.94" y2="15.24" width="0.1524" layer="91"/>
+<pinref part="J12(*)" gate="G$1" pin="3"/>
+</segment>
 </net>
 <net name="REM-" class="0">
 <segment>
@@ -17047,7 +17187,7 @@ Source: ERNI-D-Sub-Conmnectors-d.pdf / www.erni.com</description>
 <label x="27.94" y="53.34" size="1.778" layer="95"/>
 </segment>
 <segment>
-<wire x1="50.8" y1="22.86" x2="48.26" y2="22.86" width="0.1524" layer="91"/>
+<wire x1="55.88" y1="20.32" x2="53.34" y2="20.32" width="0.1524" layer="91"/>
 <pinref part="K1(*)" gate="3" pin="S"/>
 </segment>
 </net>
@@ -17065,7 +17205,7 @@ Source: ERNI-D-Sub-Conmnectors-d.pdf / www.erni.com</description>
 <label x="27.94" y="58.42" size="1.778" layer="95"/>
 </segment>
 <segment>
-<wire x1="55.88" y1="12.7" x2="55.88" y2="15.24" width="0.1524" layer="91"/>
+<wire x1="60.96" y1="10.16" x2="60.96" y2="12.7" width="0.1524" layer="91"/>
 <pinref part="K1(*)" gate="3" pin="P"/>
 </segment>
 </net>
@@ -17081,11 +17221,11 @@ Source: ERNI-D-Sub-Conmnectors-d.pdf / www.erni.com</description>
 <wire x1="111.76" y1="53.34" x2="111.76" y2="60.96" width="0.1524" layer="91"/>
 </segment>
 <segment>
-<wire x1="91.44" y1="27.94" x2="91.44" y2="25.4" width="0.1524" layer="91"/>
+<wire x1="96.52" y1="25.4" x2="96.52" y2="22.86" width="0.1524" layer="91"/>
 <pinref part="T1(*)" gate="G$1" pin="C"/>
 </segment>
 <segment>
-<wire x1="71.12" y1="15.24" x2="71.12" y2="12.7" width="0.1524" layer="91"/>
+<wire x1="76.2" y1="12.7" x2="76.2" y2="10.16" width="0.1524" layer="91"/>
 <pinref part="K1(*)" gate="1" pin="2"/>
 </segment>
 </net>
@@ -17128,7 +17268,7 @@ Source: ERNI-D-Sub-Conmnectors-d.pdf / www.erni.com</description>
 <wire x1="185.42" y1="116.84" x2="220.98" y2="116.84" width="0.1524" layer="91"/>
 <wire x1="220.98" y1="116.84" x2="220.98" y2="99.06" width="0.1524" layer="91"/>
 <label x="220.98" y="109.22" size="1.778" layer="95" rot="R90"/>
-<pinref part="K2" gate="G$1" pin="5"/>
+<pinref part="J4" gate="G$1" pin="5"/>
 </segment>
 <segment>
 <wire x1="132.08" y1="162.56" x2="139.7" y2="162.56" width="0.1524" layer="91"/>
@@ -17146,7 +17286,7 @@ Source: ERNI-D-Sub-Conmnectors-d.pdf / www.erni.com</description>
 <wire x1="162.56" y1="165.1" x2="162.56" y2="160.02" width="0.1524" layer="91"/>
 </segment>
 <segment>
-<wire x1="71.12" y1="25.4" x2="71.12" y2="27.94" width="0.1524" layer="91"/>
+<wire x1="76.2" y1="22.86" x2="76.2" y2="25.4" width="0.1524" layer="91"/>
 <pinref part="K1(*)" gate="1" pin="1"/>
 </segment>
 </net>
@@ -17160,7 +17300,7 @@ Source: ERNI-D-Sub-Conmnectors-d.pdf / www.erni.com</description>
 <wire x1="134.62" y1="43.18" x2="241.3" y2="43.18" width="0.1524" layer="91"/>
 <wire x1="241.3" y1="43.18" x2="241.3" y2="78.74" width="0.1524" layer="91"/>
 <label x="231.14" y="81.28" size="1.778" layer="95"/>
-<pinref part="K2" gate="G$1" pin="6"/>
+<pinref part="J4" gate="G$1" pin="6"/>
 <wire x1="210.82" y1="83.82" x2="210.82" y2="78.74" width="0.1524" layer="91"/>
 <wire x1="210.82" y1="78.74" x2="241.3" y2="78.74" width="0.1524" layer="91"/>
 </segment>
@@ -17176,7 +17316,7 @@ Source: ERNI-D-Sub-Conmnectors-d.pdf / www.erni.com</description>
 <junction x="114.3" y="43.18"/>
 </segment>
 <segment>
-<wire x1="96.52" y1="20.32" x2="99.06" y2="20.32" width="0.1524" layer="91"/>
+<wire x1="101.6" y1="17.78" x2="104.14" y2="17.78" width="0.1524" layer="91"/>
 <pinref part="T1(*)" gate="G$1" pin="B"/>
 </segment>
 </net>
@@ -17196,7 +17336,7 @@ Source: ERNI-D-Sub-Conmnectors-d.pdf / www.erni.com</description>
 <wire x1="243.84" y1="96.52" x2="231.14" y2="96.52" width="0.1524" layer="91"/>
 <wire x1="203.2" y1="142.24" x2="243.84" y2="142.24" width="0.1524" layer="91"/>
 <label x="233.68" y="96.52" size="1.778" layer="95"/>
-<pinref part="K2" gate="G$1" pin="9"/>
+<pinref part="J4" gate="G$1" pin="9"/>
 <wire x1="218.44" y1="83.82" x2="218.44" y2="71.12" width="0.1524" layer="91"/>
 <wire x1="218.44" y1="71.12" x2="243.84" y2="71.12" width="0.1524" layer="91"/>
 <wire x1="243.84" y1="71.12" x2="243.84" y2="96.52" width="0.1524" layer="91"/>
@@ -17212,7 +17352,7 @@ Source: ERNI-D-Sub-Conmnectors-d.pdf / www.erni.com</description>
 <wire x1="127" y1="101.6" x2="132.08" y2="101.6" width="0.1524" layer="91"/>
 <junction x="132.08" y="101.6"/>
 <label x="193.04" y="101.6" size="1.778" layer="95"/>
-<pinref part="K2" gate="G$1" pin="1"/>
+<pinref part="J4" gate="G$1" pin="1"/>
 <wire x1="210.82" y1="101.6" x2="210.82" y2="99.06" width="0.1524" layer="91"/>
 </segment>
 </net>
