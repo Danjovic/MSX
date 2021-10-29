@@ -5,7 +5,7 @@ Recreation of the FA-32 cassete recorder interface for the Casio MX-10, MX-101 a
 The whole project was designed to be easy to reproduce. The original circuit was reverse engineered and a custom, 
 single sided PCB was designed to fit into a [Hammond 1593J](http://www.hammondmfg.com/pdf/1593J.pdf) plastic case. 
 
-![PCB Image](/FA-32/board_db9.png "Single Sided Board")
+![PCB Image](/FA-32/FA-32-Board.png "Single Sided Board")
 
 The board provides options for some of the components:
 - Relay:
