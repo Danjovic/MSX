@@ -4,4 +4,8 @@ Atari keybads are a 3x4 matrix that can be read by MSX by pulling down consecuti
 Pins 6 and 7 are native Open Collector In/Outs, while pin 8 is turned into an open collector by a 1n4148 diode and a 4k7 pullup resitor. 
 
 ## Schematics ##
-[schematics](/doc/A2600KB_to_MSX.png)
+![Simplified](/KB26/doc/A2600KB_to_MSX_adapter2.png)
+
+![with Atari Controller](/KB26/doc/A2600KB_to_MSX.png)
+
+
