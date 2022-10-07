@@ -71,14 +71,14 @@ CKANYTAP:
 	di            ; 
 	ld c,0        ; 
 	; port A
-	ld de,0bf3ah  ; start with Joysel port A, pins 8=1, 7=1, 6=0 (read a1)
+	ld de,0ba3ah  ; start with Joysel port A, pins 8=1, 7=1, 6=0 (read a1)
 	call FBCHECK  ; return Cy = State of pin 7
     rl  c         ; c = 0 0 0 0 0 0 0 a1
 	ld de,08f0fh  ; repeat with Joysel port A, pins 8=0, 7=1, 6=1 (read a0)
 	call FBCHECK  ; feedback check at pin 7
     rl  c         ; c = 0 0 0 0 0 0 a1 a0
     ; port b
-	ld de,0bf7ah  ; repeat with Joysel port B, pins 8=1, 7=1, 6=0 (read b1)
+	ld de,0ba7ah  ; repeat with Joysel port B, pins 8=1, 7=1, 6=0 (read b1)
 	call FBCHECK  ; return Cy = State of pin 7
     rl  c         ; c = 0 0 0 0 0 a1 a0 b1
 	ld de,08f4fh  ; repeat with Joysel port B, pins 8=0, 7=1, 6=1 (read b0)
