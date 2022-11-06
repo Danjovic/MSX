@@ -70,7 +70,7 @@ TST_RIGHT
    ld (hl),a   ; clear previous button press state
    bit 0,e   ; test for  right -> key 'D'
    jr nz, TST_UP
-   set 2,(hl) ; activate bit corresponding to 'D' key
+   set 1,(hl) ; activate bit corresponding to 'D' key
 TST_UP
    inc hl  ; point to Y4 now
    inc hl  ; point to Y5 now
