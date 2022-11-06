@@ -110,7 +110,7 @@ TST_A:
    jr nz,TST_B      ; no, check trigger b
    set 0,a          ; yes, add it to the return value (active high)
 TST_B:
-   bit 7,e          ; is trigger B pressed (active low)
+   bit 6,e          ; is trigger B pressed (active low)
    ret nz           ; no, return from function
    set 1,a          ; yes, add it to the return value (active high)
    ret              ; and return from function
