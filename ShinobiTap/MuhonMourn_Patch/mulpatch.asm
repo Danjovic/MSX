@@ -20,7 +20,7 @@ JOY2:  equ 86c5h ; Joystick 02  -      RG DW UP LF 0  0  TB TA
 ;org 8669h
 ;  jp NINJAPATCH
 
-org 0d400h
+org 0e000h
 
 
 ;
@@ -31,7 +31,7 @@ NINJAPATCH:
 ; check for presence of Tap
    call CHECKTAPS
    bit 3,c   ; bit 3 should be 0 for either shinobi or ninja tap
-   jr nz,DOSAMESTUFF  ; if no tap present use standart game controls
+   jr nz,DOSAMESTUFF  ; if no tap present use standard game controls
    
 ; scan taps
    ld de,0fa7ah
@@ -111,7 +111,7 @@ TST_A:
    set 0,a          ; yes, add it to the return value (active high)
 TST_B:
    bit 7,e          ; is trigger B pressed (active low)
-   ret z            ; no, return from function
+   ret nz           ; no, return from function
    set 1,a          ; yes, add it to the return value (active high)
    ret              ; and return from function
 ;
