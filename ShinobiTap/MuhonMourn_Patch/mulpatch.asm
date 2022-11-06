@@ -34,7 +34,8 @@ NINJAPATCH:
    jr nz,DOSAMESTUFF  ; if no tap present use standard game controls
    
 ; scan taps
-   ld de,0fa7ah
+;   ld de,0fa7ah  ;  Tap connected to joy port 2
+   ld de,0ba3ah  ;   Tap connected to joy port 1
    ld hl,ntapData
    call GETNIN ; read TAPS on port 1
 
