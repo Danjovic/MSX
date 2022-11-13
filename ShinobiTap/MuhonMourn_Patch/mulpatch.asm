@@ -16,6 +16,9 @@ Y10:   equ 86c3h ; kbd matrix line 0a  .  ,  -  9  8  7  6  5
 JOY1:  equ 86c4h ; Joystick 01  -      RG DW UP LF 0  0  TB TA
 JOY2:  equ 86c5h ; Joystick 02  -      RG DW UP LF 0  0  TB TA
 
+KBJOY : equ 0
+N_TAP : equ 1
+
 
 ;org 8669h
 ;  jp NINJAPATCH
@@ -33,6 +36,8 @@ NINJAPATCH:
    bit 3,c   ; bit 3 should be 0 for either shinobi or ninja tap
    jr nz,DOSAMESTUFF  ; if no tap present use standard game controls
    
+   ld e,N_TAP
+   call updateLabels 
 ; scan taps
 ;   ld de,0fa7ah  ;  Tap connected to joy port 2
    ld de,0ba3ah  ;   Tap connected to joy port 1
@@ -88,6 +93,10 @@ RETURN:
 
 
 DOSAMESTUFF:
+
+    ld e,KBJOY
+    call updateLabels 
+
     ld a,00h
     ld hl,86b9h
     jp 866ch
@@ -261,8 +270,113 @@ PORSEL:
    ret
 
 
+updateLabels:
+   ld a,(inputDevice)
+   cp e
+   ld a,e 
+   ret z
+   ld (inputDevice),a
+   cp KBJOY
+   jr nz,writeNtapLabels
+
+
+writeKBJoyLabels:
+  ld hl,msgPressKbJoy
+  ld de, dstPress
+  ld bc,9
+  ldir
+
+  ld hl,msgPressKbJoy
+  ld de, dstPress2
+  ld bc,9
+  ldir
+
+  ld hl,msgPlayer1KbJoy
+  ld de, dstPlay1
+  ld bc,5
+  ldir
+
+  ld hl,msgPlayer2KbJoy
+  ld de, dstPlay2
+  ld bc,4
+  ldir
+
+  ld hl,msgPlayer3KbJoy
+  ld de, dstPlay3
+  ld bc,9
+  ldir
+
+  ld hl,msgPlayer4KbJoy
+  ld de, dstPlay4
+  ld bc,9
+  ldir
+  ret   
+
+writeNtapLabels:
+  ld hl,msgPressNtap
+  ld de, dstPress
+  ld bc,9
+  ldir
+
+  ld hl,msgPressNtap
+  ld de, dstPress2
+  ld bc,9
+  ldir
+
+
+  ld hl,msgPlayer1Ntap
+  ld de, dstPlay1
+  ld bc,5
+  ldir
+
+  ld hl,msgPlayer2Ntap
+  ld de, dstPlay2
+  ld bc,4
+  ldir
+
+  ld hl,msgPlayer3Ntap
+  ld de, dstPlay3
+  ld bc,9
+  ldir
+
+  ld hl,msgPlayer4Ntap
+  ld de, dstPlay4
+  ld bc,9
+  ldir
+  ret 
+
+
+
+
+dstPress :  equ 094eah  ;  9 chars
+dstPress2 : equ 09abbh  ;  9 chars
+msgPressNtap:   db "Button 1",7
+msgPressKbJoy:  db "Space Key"
+
+dstPlay1 : equ 0959fh ; 5 chars 
+msgPlayer1Ntap:  db  7,"Joy1"
+msgPlayer1KbJoy: db  "arrow"
+
+dstPlay2 : equ 09547h ; 4 chars
+msgPlayer2Ntap:  db "Joy2"            
+msgPlayer2KbJoy: db "wasd"
+
+dstPlay3 : equ 095bch ; 9 chars
+msgPlayer3Ntap:  db "Joy3",7,7,7,7,7
+msgPlayer3KbJoy: db "joystick1"
+
+dstPlay4 : equ 09619h ; 9 chars
+msgPlayer4Ntap:  db 7,7,7,7,7,"Joy4"
+msgPlayer4KbJoy: db "joystick2"
+
+
+ inputDevice:
+          db KBJOY
  ntapData:
 tap1Data: db 0
 tap2Data: db 0
 tap3Data: db 0
 tap4Data: db 0
+zz: nop
+org 0e1ffh
+nop
