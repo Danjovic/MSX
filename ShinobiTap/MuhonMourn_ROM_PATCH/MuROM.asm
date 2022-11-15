@@ -4,7 +4,7 @@ RDSLT  : equ 000ch
 CHGMOD : equ 005fh
 LDIRVM : equ 005ch
 DISSCR : equ 0041h
-
+RSLREG : equ 0138h 	
 PATCHLEN: equ 01f0h
 PATCHBEGIN: equ 0e000h
 
@@ -12,6 +12,7 @@ FORCLR: equ 0f3e9h
 BAKCLR: equ 0f3e9h 
 BDRCLR: equ 0f3ebh
 BOTTOM: equ 0fc48h
+EXPTBL: equ 0fcc1h 
 
 ; variables
 presentSlot: equ PATCHBEGIN + PATCHLEN ; last address of patch
@@ -87,14 +88,32 @@ djnz SPL_DLY
  ld bc,01400h
  ldir
 
+
 ; read from game slot and write on RAM
-in a,(0a8h) ;  bits 2,3 are the slot where this rom is running
- 
+; suggested by user abekermsx from github
+get_page1_slot:
+ call RSLREG ; Read the primary slots register
  rrca
  rrca
- and 03  ; isolate bits
+ and 3
+ ld c,a
+ ld b,0
+ ld hl,EXPTBL ; HL = Address of the secondary slot flags table
+ add hl,bc
+ ld a,(hl)
+ and $80 ; Keep the bit 7 (secondary slot flag)
+ or c
+ ld c,a
+ inc hl
+ inc hl
+ inc hl
+ inc hl ; HL = Address of the secondary slot register in the secondary slot register table
+ ld a,(hl)
+ and $0c
+ or c
  ld ( presentSlot ),a
 
+; prepare to tranfer data
  ld hl,8000h
  ld de,8000h
  ld bc,4000h
