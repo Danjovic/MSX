@@ -1,8 +1,18 @@
 ; MuhonMourn Cart
 
-RDSLT: equ 000ch
+RDSLT  : equ 000ch
+CHGMOD : equ 005fh
+LDIRVM : equ 005ch
+DISSCR : equ 0041h
+
 PATCHLEN: equ 01f0h
-PATCHBEGIN equ 0e000h
+PATCHBEGIN: equ 0e000h
+
+FORCLR: equ 0f3e9h
+BAKCLR: equ 0f3e9h 
+BDRCLR: equ 0f3ebh
+BOTTOM: equ 0fc48h
+
 ; variables
 presentSlot: equ PATCHBEGIN + PATCHLEN ; last address of patch
 
@@ -21,6 +31,49 @@ ld (presentSlot),a  ; save present slot configuration
 ;                page 1 -> ROM
 ;                page 2 -> RAM
 ;                page 3 -> RAM
+
+; Screen3:color 15,1,1
+ld a,15        ; color 15,1,1
+ld (FORCLR),a
+ld a,1
+ld (BAKCLR),a
+ld (BDRCLR),a
+ld a,3
+call CHGMOD   
+
+; prepare for transfer
+ld bc,1536 ; Length
+ld de,0    ; VRAM address
+
+ld a,(BOTTOM+1)
+cp 80h ;  machines with 32k or more always have 80h here
+jr z, SPLASH_SCREEN
+jr c, SPLASH_SCREEN
+
+DO_NORAM_SCREEN
+ld hl,NORAM
+call LDIRVM
+
+FREEZE: jr FREEZE
+
+SPLASH_SCREEN:
+ld a,(presentSlot)
+ld hl,QUEEN3
+bit 2,a   ; test for cart inserted on odd/even slot
+
+DO_QUEEN:    ; even
+jr z, DO_SPLASH
+
+DO_INFOSOC:  ; odd
+ld hl,INFOSOC
+
+DO_SPLASH:
+call LDIRVM
+
+ld b,3
+SPL_DLY:
+call delay1s
+djnz SPL_DLY
 
 ; copy the upper part of the game c000..d3ff, e000..e1f0
  ; copy the Ninja Tap code
@@ -84,6 +137,8 @@ in a,(0a8h) ;  bits 2,3 are the slot where this rom is running
  or d          ; add them to the slot register
  out (0a8h),a  ; select correct pages
 
+ ; disable the screen 
+ call DISSCR
  ; now jump to the game
  ld hl, 0915fh
  ex (sp),hl
@@ -92,6 +147,27 @@ in a,(0a8h) ;  bits 2,3 are the slot where this rom is running
  ; ei
  ; jp 0915fh
 ENDSWSLOT:
+
+delay1s:
+ld hl,1000    ; 
+dl0:          ; 
+ld c,154      ; 8      | = 8 + (5+5+13) * (C-1) + (5+5+8) * C 
+dl1:          ;        | = 8 + (5+5+13) * C - (13-8) 
+nop           ; 5      | = (8-5) + (5+5+13) * C
+dec c         ; 5      | = 3 + 23 * C  
+jr nz,dl1     ; 13/8   | for C = 154, dl1= 3 + 23 * 154 = 3.545 cycles
+
+dec hl        ; 7      | = ( 3545 + 7 + 5 + 5 + 5 + 13 ) * HL - (13-8)
+ld a,h        ; 5      | = 3580 * HL - 5
+nop           ; 5      | for HL = 1000, dl0 = 3580 * 1000 - 5 = 3.579.995 cycles 
+or l          ; 5      | or 1 second on a standard MSX machine
+jr nz,dl0     ; 13/8   | 
+ret           ;        |
+
+
+include splashNoram.inc
+include splashInfoSoc.inc
+include splashQueen3.inc
 
 
 FREE_AREA:
