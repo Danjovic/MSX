@@ -1,0 +1,4 @@
+10 'Scan J2C
+20 BLOAD"sj.bin":DEFUSR=&HA000
+30 A=USR(0)
+
