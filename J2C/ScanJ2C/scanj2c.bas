@@ -1,4 +1,64 @@
-10 'Scan J2C
-20 BLOAD"sj.bin":DEFUSR=&HA000
-30 A=USR(0)
-
+10'sj.bin
+20 restore 1000
+30 for a=&hA000to&hA1CC : read b$
+40 poke a,val("&h"+b$) : next
+50 defusr=&hA000:print"a=usr(0)" 
+60'
+1000 data 21,57,a0,cd,9b,a0,a7,cd
+1010 data 11,a0,21,6f,a0,cd,9b,a0
+1020 data 37,cd,b1,a0,0e,02,1e,7f
+1030 data 16,00,21,cd,a1,cd,0a,a1
+1040 data cd,3b,a1,cd,76,a1,cd,e9
+1050 data a0,36,00,38,04,36,01,16
+1060 data 01,23,0c,0c,1d,20,e6,cb
+1070 data 42,21,7a,a0,ca,9b,a0,21
+1080 data cd,a1,06,7f,0e,01,7e,a7
+1090 data 28,08,cd,86,a0,3e,20,cd
+1100 data a2,00,23,0c,10,f0,c9,0d
+1110 data 0a,4a,32,43,20,53,63,61
+1120 data 6e,6e,65,72,0d,0a,50,6f
+1130 data 72,74,20,41,3a,20,00,0d
+1140 data 0a,50,6f,72,74,20,42,3a
+1150 data 20,00,4e,6f,20,41,6e,73
+1160 data 77,65,72,0d,0a,00,79,1f
+1170 data 1f,1f,1f,cd,8f,a0,79,e6
+1180 data 0f,c6,90,27,ce,40,27,cd
+1190 data a2,00,c9,7e,b7,c8,cd,a2
+1200 data 00,23,18,f7,e5,f5,21,6d
+1210 data 00,2b,7c,b5,20,fb,f1,e1
+1220 data c9,f3,3e,0f,d3,a0,db,a2
+1230 data 38,13,cb,b7,cb,e7,d3,a1
+1240 data cd,a4,a0,cb,c7,d3,a1,cb
+1250 data 8f,d3,a1,18,11,cb,f7,cb
+1260 data ef,d3,a1,cd,a4,a0,cb,d7
+1270 data d3,a1,cb,9f,d3,a1,47,cd
+1280 data e9,a0,cd,e9,a0,cd,e9,a0
+1290 data c9,78,cb,77,20,0e,cb,87
+1300 data d3,a1,cb,cf,d3,a1,cb,c7
+1310 data d3,a1,47,c9,cb,97,d3,a1
+1320 data cb,df,d3,a1,cb,d7,d3,a1
+1330 data 47,c9,78,cb,77,20,16,cb
+1340 data cf,d3,a1,cb,c7,d3,a1,cb
+1350 data 87,d3,a1,cb,8f,d3,a1,cb
+1360 data c7,d3,a1,47,c9,cb,df,d3
+1370 data a1,cb,d7,d3,a1,cb,97,d3
+1380 data a1,cb,9f,d3,a1,cb,d7,d3
+1390 data a1,47,c9,78,06,08,cb,77
+1400 data 20,1a,cb,01,cb,87,30,02
+1410 data cb,c7,d3,a1,cb,cf,d3,a1
+1420 data cb,8f,d3,a1,10,ec,cb,c7
+1430 data d3,a1,47,c9,cb,01,cb,97
+1440 data 30,02,cb,d7,d3,a1,cb,df
+1450 data d3,a1,cb,9f,d3,a1,10,ec
+1460 data cb,d7,d3,a1,47,c9,78,cb
+1470 data 77,20,29,cb,c7,d3,a1,cb
+1480 data cf,d3,a1,e5,21,d0,07,47
+1490 data 3e,0e,d3,a0,db,a2,e6,10
+1500 data 28,06,2b,7c,b5,20,f5,37
+1510 data 3e,0f,d3,a0,78,cb,8f,d3
+1520 data a1,47,e1,c9,cb,d7,d3,a1
+1530 data cb,df,d3,a1,e5,21,d0,07
+1540 data 47,3e,0e,d3,a0,db,a2,e6
+1550 data 10,28,06,2b,7c,b5,20,f5
+1560 data 37,3e,0f,d3,a0,78,cb,9f
+1570 data d3,a1,47,e1,c9
