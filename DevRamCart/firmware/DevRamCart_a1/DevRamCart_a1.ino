@@ -19,7 +19,10 @@
  *    \$$$$$$  |\$$$$$$$ |$$ |       \$$$$  |                         
  *     \______/  \_______|\__|        \____/                          
  *                                                                    
- *                                                                    
+ *    32k Eprom emulator for MSX. 
+ *    Danjovic, 2025
+ *    Released under GPL V3
+ *    basic release - Februray 2025
  *                                                                    
  */
 
@@ -38,14 +41,20 @@
 //   \__,_\___|_| |_|_||_|_|\__|_\___/_||_/__/
 //
 
+// Neopixel
 #define NEO_PIXELS 1
 #define RGB_LED_BRIGHTNESS 30
+#define MANUAL_RECEIVE_COLOR GREEN
+#define AUTO_RECEIVE_COLOR CYAN
+#define LOAD_SPIFSFILE_COLOR BLUE
+#define STORE_SPIFSFILE_COLOR YELLOW
 
-#define PERIOD 10         // 10 ms
+// button scan
+#define PERIOD 10         // 10 ms button sample at ~100Hz
 #define LPTHRESHOLD 50    // 500ms second
 #define PULSETHRESHOLD 5  // 50ms
 
-// GPIO pinst / definitions
+// GPIO pins / definitions
 #define RESET 0    // Active high, resets the MSX
 #define nEN 1      // LOW - Enable Z80 Address bus and disable shift registers
 #define SCK 2      // Shift register serial clock
@@ -75,6 +84,7 @@
 //   / _` / _` |  _/ _` | (_-<  _| '_| || / _|  _| || | '_/ -_|_-<
 //   \__,_\__,_|\__\__,_| /__/\__|_|  \_,_\__|\__|\_,_|_| \___/__/
 //
+
 typedef enum {
   START_CODE = 0,
   BYTE_COUNT,
@@ -102,7 +112,6 @@ typedef enum {
   WHITE = 0xffffff
 } t_rgbColors;
 
-
 typedef enum {
   btNONE = 0,
   btLONG,
@@ -121,10 +130,29 @@ typedef enum {
 //   | .__/_| \___/\__\___/\__|\_, | .__/\___/__/
 //   |_|                       |__/|_|
 
+
+// Main state machine
+void runAutoReceive(void);    // receive an ihex file and store it into sram when rech EOF
+void runManualReceive(void);  // receive an ihex file until EOF is reached
+void runManualReady(void);    // wait for a command after reception reach EOF
+
+// Button scan
+t_buttonEvents getButtonEvent(uint8_t pin);  // scan button
+
+// Neopixel
+void setRGBled(t_rgbColors color);                   // Set neopixel color and updtate it
+void blinkRGBled(uint8_t times, t_rgbColors color);  // blink neopixel to indicate the state of an operation
+
+//  intel hex receiveing state machine
 t_hexEngineExitCodes iHexEngine(uint8_t rxByte);  // non blocking intel hex machine stream decoder
 uint8_t char2nibble(uint8_t b);                   // convert '0'..'9','A'..'F' into hexadecimal nibble 0..15
-void setRGBled(t_rgbColors color);
-void transferFileToSRAM(void);
+
+// Transference functions
+bool transferSRAMtoSPIffs(void);    // store the rambuffer into a SPIFFS file
+bool transferSPIffsToBuffer(void);  // load a file from SPIFFS to rambuffer
+void writeRAMbufferToSRAM(void);    // write rambuffer to SRAM. used multiple times along the program
+void transferBufferToSRAM(void);// shift out contents of rambuffer to SRAM
+
 
 //                   _            _
 //    __ ___ _ _  __| |_ __ _ _ _| |_ ___
@@ -153,15 +181,11 @@ uint8_t incomingByte;
 t_hexFilefields currentField;
 
 // master mode state machine
-bool autoReceiveMode;
 t_masterModes masterMode;
 
 // button handling timer
 t_buttonEvents buttonEvent;
 unsigned long timeNow;
-
-// spiFS sanity
-bool SPI_filesystem_Sanity;
 
 //            _
 //    ___ ___| |_ _  _ _ __
@@ -169,7 +193,11 @@ bool SPI_filesystem_Sanity;
 //   /__/\___|\__|\_,_| .__/
 //                    |_|
 void setup() {
+
+  // Serial port
   Serial.begin(115200);
+  while (!Serial) {}  // Wait for serial port to connect
+  Serial.println("Dev Ram Cart");
 
   // GPIO pins
   pinMode(RESET, OUTPUT);
@@ -188,34 +216,29 @@ void setup() {
   digitalWrite(RCK, LOW);
   digitalWrite(SERIN, LOW);
   digitalWrite(nWR, HIGH);
-  //  digitalWrite(LED, LOW);
+
 
   // initialize neopixel
   ledRGB.begin();
   ledRGB.setBrightness(RGB_LED_BRIGHTNESS);
 
   // initialize SPI filesystem
+  Serial.print("SPIFFS Mount:");
   if ((SPIFFS.begin(FORMAT_SPIFFS_IF_FAILED) &&  // formatted ?
        SPIFFS.begin(true)))                      // mounted   ?
   {
-    SPI_filesystem_Sanity = true;
+    Serial.println("ok");
   } else {
-    Serial.println("SPIFFS Mount Failed");  // if either fails message
-    SPI_filesystem_Sanity = false;
+    Serial.println("fail");  // if either fails message
     blinkRGBled(5, RED);
   }
 
-
-
-
-  // initial setup - Receive file, manual load.
+  // init some variables  Receive file, manual load.
   currentField = START_CODE;
-  autoReceiveMode = false;
   masterMode = MANUAL_RECEIVE;
   buttonEvent = btNONE;
-  setRGBled(GREEN);
+  setRGBled(MANUAL_RECEIVE_COLOR);
   digitalWrite(LED, LOW);
-
 
   // initialize time reference
   timeNow = millis();
@@ -256,14 +279,17 @@ void loop() {
 //   |_|_|_|_| .__/_\___|_|_|_\___|_||_\__\__,_|\__|_\___/_||_|
 //           |_|
 
+//
+//  Main state machine functions
+//
+
+// receive an ihex file and store it into sram when rech EOF
 void runAutoReceive(void) {
   t_hexEngineExitCodes err = errUNDEFINED;
 
   // process serial data
   if (Serial.available() > 0) {
-    //err = iHexEngine(incomingByte);
     incomingByte = Serial.read();
-    // err = iHexEngine_fake(incomingByte);   TODO REMOVE
     err = iHexEngine(incomingByte);
   }
 
@@ -275,7 +301,7 @@ void runAutoReceive(void) {
     if (buttonEvent == btPULSE) {  // change receive mode
       buttonEvent = btNONE;
       masterMode = MANUAL_RECEIVE;
-      setRGBled(GREEN);
+      setRGBled(MANUAL_RECEIVE_COLOR);
     }
     if (buttonEvent == btLONG) {
       buttonEvent = btNONE;
@@ -283,27 +309,25 @@ void runAutoReceive(void) {
       if (!transferSPIffsToBuffer()) {  // write ram buffer to sram
         Serial.println("fail");
         blinkRGBled(2, RED);
-        currentField = START_CODE;       
+        currentField = START_CODE;
       } else {
         Serial.println("ok");
-        blinkRGBled(2, BLUE);
+        blinkRGBled(2, LOAD_SPIFSFILE_COLOR);
         writeRAMbufferToSRAM();
         currentField = START_CODE;
       }
-      setRGBled(CYAN);
+      setRGBled(AUTO_RECEIVE_COLOR);
     }
   }
 }
 
-
+// receive an ihex file until EOF is reached
 void runManualReceive(void) {
   t_hexEngineExitCodes err = errUNDEFINED;
 
   // process serial data
   if (Serial.available() > 0) {
-    //err = iHexEngine(incomingByte);
     incomingByte = Serial.read();
-    // err = iHexEngine_fake(incomingByte);   TODO REMOVE
     err = iHexEngine(incomingByte);
   }
 
@@ -316,7 +340,7 @@ void runManualReceive(void) {
     if (buttonEvent == btPULSE) {
       buttonEvent = btNONE;
       masterMode = AUTO_RECEIVE;
-      setRGBled(CYAN);
+      setRGBled(AUTO_RECEIVE_COLOR);
     }
     if (buttonEvent == btLONG) {
       buttonEvent = btNONE;
@@ -327,26 +351,24 @@ void runManualReceive(void) {
         blinkRGBled(2, RED);
       } else {
         Serial.println("ok");
-        blinkRGBled(2, BLUE);
+        blinkRGBled(2, LOAD_SPIFSFILE_COLOR);
         writeRAMbufferToSRAM();
       }
-      currentField = START_CODE;   
-      setRGBled(GREEN);
+      currentField = START_CODE;
+      setRGBled(MANUAL_RECEIVE_COLOR);
     }
   }
 }
 
 
-
+// wait for a command after reception reach EOF
 void runManualReady(void) {
   t_hexEngineExitCodes err = errUNDEFINED;
-
-  // don't process serial data
 
   // process state logic
   if (buttonEvent == btPULSE) {
     buttonEvent = btNONE;
-    writeRAMbufferToSRAM();
+    writeRAMbufferToSRAM();  //
     ledOFF();
     currentField = START_CODE;
     masterMode = MANUAL_RECEIVE;
@@ -360,15 +382,18 @@ void runManualReady(void) {
       blinkRGBled(2, RED);
     } else {
       Serial.println("ok");
-      blinkRGBled(2, YELLOW);
+      blinkRGBled(2, STORE_SPIFSFILE_COLOR);
       writeRAMbufferToSRAM();
       masterMode = MANUAL_RECEIVE;
     }
-    currentField = START_CODE;   
-    setRGBled(GREEN);
+    currentField = START_CODE;
+    setRGBled(MANUAL_RECEIVE_COLOR);
   }
 }
 
+//
+// Button scan functions
+//
 
 // scan button
 t_buttonEvents getButtonEvent(uint8_t pin) {
@@ -388,13 +413,32 @@ t_buttonEvents getButtonEvent(uint8_t pin) {
 }
 
 
+//
+// Neopixel handling
+//
+
+// Set neopixel color and updtate it
 void setRGBled(t_rgbColors color) {
   ledRGB.setPixelColor(0, color);
   ledRGB.show();
 }
 
+// blink neopixel to indicate the state of an operation
+void blinkRGBled(uint8_t times, t_rgbColors color) {
+  if (times) {
+    do {
+      setRGBled(color);
+      delay(500);
+      setRGBled(BLACK);
+      delay(300);
+    } while (--times);
+  }
+}
 
-// ***************************************************************************
+
+//
+//  intel hex receiveing state machine
+//
 t_hexEngineExitCodes iHexEngine(uint8_t rxByte) {
   static uint8_t phase = 0;
   static uint8_t byteCounter = 0;
@@ -404,22 +448,20 @@ t_hexEngineExitCodes iHexEngine(uint8_t rxByte) {
   static uint8_t recordType;
   uint8_t tempData;
 
-
+  // filter only valid characters
   if (rxByte != ':' &&                   //
       (rxByte < '0' || rxByte > '9') &&  //
       (rxByte < 'a' || rxByte > 'f') &&  //
       (rxByte < 'A' || rxByte > 'F'))    //
     return errRUNNING;
 
-
+  // run state machine
   switch (currentField) {
     case START_CODE:
       Serial.print(".");
       if (rxByte == ':') {
         phase = 0;
         checkSum = 0;
-        // Serial.print(" sum=");
-        // Serial.print(checkSum, HEX);
         currentField = BYTE_COUNT;
       }
       break;
@@ -428,11 +470,7 @@ t_hexEngineExitCodes iHexEngine(uint8_t rxByte) {
       if (phase == 1) {  // last nibble
         phase = 0;
         byteCounter = char2nibble(rxByte) + (char2nibble(rxBuffer[0]) << 4);
-        // Serial.print("Byte Count=");
-        // Serial.println(byteCounter);
         checkSum += byteCounter;
-        // Serial.print(" sum=");
-        // Serial.print(checkSum, HEX);
         currentField = ADDRESS;
 
       } else {  // first nibble
@@ -448,15 +486,9 @@ t_hexEngineExitCodes iHexEngine(uint8_t rxByte) {
                         (char2nibble(rxBuffer[1]) << 8) +   //
                         (char2nibble(rxBuffer[2]) << 4) +   //
                         char2nibble(rxByte);                //
-        // Serial.print("Address=");
-        // Serial.println(recordAddress, HEX);
 
-        checkSum += (recordAddress >> 8);
-        // Serial.print(" sum.h=");
-        // Serial.print(checkSum, HEX);  // add high byte
-        checkSum += (recordAddress & 0xff);
-        // Serial.print(" sum.l=");
-        // Serial.print(checkSum, HEX);  // add low byte
+        checkSum += (recordAddress >> 8);    // add hight byte
+        checkSum += (recordAddress & 0xff);  // add low byte
 
         currentField = RECORD_TYPE;
       } else {  // first, second and third nibble
@@ -470,11 +502,7 @@ t_hexEngineExitCodes iHexEngine(uint8_t rxByte) {
       if (phase == 1) {  // last nibble
         phase = 0;
         recordType = char2nibble(rxByte) + (char2nibble(rxBuffer[0]) << 4);
-        // Serial.print(" Record type=");
-        // Serial.println(recordType);
         checkSum += recordType;
-        // Serial.print(" sum=");
-        // Serial.print(checkSum, HEX);
         currentField = (byteCounter > 0 ? DATA : CHECK_SUM);  // skip data if byte count = 0
       } else {                                                // first nibble
         rxBuffer[phase] = rxByte;
@@ -487,11 +515,6 @@ t_hexEngineExitCodes iHexEngine(uint8_t rxByte) {
         phase = 0;
         tempData = char2nibble(rxByte) + (char2nibble(rxBuffer[0]) << 4);
         checkSum += tempData;
-        // Serial.print(" sum=");
-        // Serial.print(checkSum, HEX);
-        // Serial.print("(");
-        // Serial.print(tempData, HEX);
-        // Serial.print(",");
         rambuffer[recordAddress & MAXSRAM] = tempData;  // mask address to 32k
         recordAddress++;
         byteCounter--;
@@ -504,20 +527,12 @@ t_hexEngineExitCodes iHexEngine(uint8_t rxByte) {
       }
       break;
 
-
     case CHECK_SUM:
-
       if (phase == 1) {  // last nibble
         phase = 0;
         currentField = START_CODE;  // reset machine always after checksum
 
         tempData = char2nibble(rxByte) + (char2nibble(rxBuffer[0]) << 4);
-        // Serial.print("chksum calc=");
-        // Serial.print(checkSum, HEX);
-        // Serial.print(" read=");
-        // Serial.print(tempData, HEX);
-        // Serial.print(" Sum=");
-        // Serial.print((checkSum + tempData) & 0xff, HEX);
 
         if (((checkSum + tempData) & 0xff) == 0) {  // checksum match
           if (recordType != 0) {                    // not a data record
@@ -538,9 +553,7 @@ t_hexEngineExitCodes iHexEngine(uint8_t rxByte) {
   return errRUNNING;  // default return
 }
 
-
-
-
+// convert character 0..9,A..F/a..f into value 0-15
 uint8_t char2nibble(uint8_t b) {
   if (b >= '0' && b <= '9') {
     return b - '0';
@@ -551,8 +564,11 @@ uint8_t char2nibble(uint8_t b) {
   } else return 0;
 }
 
+//
+// Transference functions
+//
 
-
+// store the rambuffer into a SPIFFS file
 bool transferSRAMtoSPIffs(void) {  // write file
   bool result = true;
   File ROMfile = SPIFFS.open("/ROM.BIN", FILE_WRITE);
@@ -566,7 +582,7 @@ bool transferSRAMtoSPIffs(void) {  // write file
   return result;
 }
 
-
+// load a file from SPIFFS to rambuffer
 bool transferSPIffsToBuffer(void) {  // read file
   bool result = true;
   File ROMfile = SPIFFS.open("/ROM.BIN", FILE_READ);
@@ -580,7 +596,7 @@ bool transferSPIffsToBuffer(void) {  // read file
   return result;
 }
 
-
+// write rambuffer to SRAM. used multiple times along the program
 void writeRAMbufferToSRAM(void) {
   Serial.print("Write bufer to SRAM:");
   ledON();
@@ -589,14 +605,12 @@ void writeRAMbufferToSRAM(void) {
   Serial.println("ok");
 }
 
-
-
+// shift out contents of rambuffer to SRAM
 void transferBufferToSRAM(void) {
   // disable buffers
   digitalWrite(nEN, HIGH);
 
-  // transfer file to SRAM
-
+  // transfer ramBuffer to SRAM
   for (uint16_t address = 0; address < 32768; address++) {
     // shift data out
     uint32_t bitsToWrite = (address << 8) | rambuffer[address];  // make a 32 bit value
@@ -621,19 +635,6 @@ void transferBufferToSRAM(void) {
   delay(1);
   digitalWrite(RESET, LOW);
 
-
   // enable buffers
   digitalWrite(nEN, LOW);
-}
-
-
-void blinkRGBled(uint8_t times, t_rgbColors color) {
-  if (times) {
-    do {
-      setRGBled(color);
-      delay(500);
-      setRGBled(BLACK);
-      delay(300);
-    } while (--times);
-  }
 }
