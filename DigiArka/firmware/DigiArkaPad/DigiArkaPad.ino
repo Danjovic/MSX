@@ -9,6 +9,7 @@
        Digispark Based Arkanoid clone/Standard Paddle for MSX
        Danjovic 2020 danjovic@gmail.com
        Expanded version for Arduino Uno, Nano and Digispark - 04/April/2020
+       Improved Open Collector emulation, fixed compilation with TinyCore - 04/March/2025
 */
 
 
@@ -30,7 +31,7 @@
 //   |___/\___|_| |_|_||_|_|\__|_\___/_||_/__/
 //
 
-#if defined (ARDUINO_AVR_DIGISPARK)
+#if defined (ARDUINO_AVR_DIGISPARK) || defined(ARDUINO_AVR_ATTINYX5)
 #define BUTTON 4 // Button input
 #define DOWN   3 // DOWN  on MSX (pin 2)
 #define CLOCK  2 // TRG A on MSX (pin 6) INT0 on AVR
@@ -308,6 +309,7 @@ inline mode_t selectOperatingMode() {
 inline void updateStandardButton() {
   if (digitalRead(BUTTON)) {
     pinMode(TRIGA, INPUT_PULLUP);
+    digitalWrite(TRIGA, HIGH); 
   } else {
     digitalWrite(TRIGA, LOW);
     pinMode(TRIGA, OUTPUT);
@@ -320,6 +322,7 @@ inline void updateStandardButton() {
 void updateVausButton() {
   if (digitalRead(BUTTON)) {
     pinMode(DOWN, INPUT_PULLUP);
+    digitalWrite(DOWN,HIGH); 
   } else {
     digitalWrite(DOWN, LOW);
     pinMode(DOWN, OUTPUT);
@@ -373,6 +376,7 @@ ISR(PCINT0_vect) { //
 
       // Turn output HIGH again
       pinMode(DATA, INPUT_PULLUP);
+      digitalWrite(DATA,HIGH);
 
     } else {  // Vaus Mode
 
@@ -387,6 +391,7 @@ ISR(PCINT0_vect) { //
       //let MSB ready at output pin (1)
       if (shiftRegister & (1 << MSBIT)) {
         pinMode(DATA, INPUT_PULLUP);
+        digitalWrite(DATA,HIGH);         // HERE
       } else {
         digitalWrite(DATA, LOW);
         pinMode(DATA, OUTPUT);
@@ -406,6 +411,7 @@ ISR(INT0_vect) {
   // output a new bit
   if (shiftRegister & (1 << MSBIT)) {
     pinMode(DATA, INPUT_PULLUP);
+    digitalWrite(DATA,HIGH);
   } else {
     digitalWrite(DATA, LOW);
     pinMode(DATA, OUTPUT);
