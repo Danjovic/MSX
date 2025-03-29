@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="6.5.0">
+<eagle version="7.2.0">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
@@ -18821,10 +18821,11 @@ Source: http://www.produktinfo.conrad.com/datenblaetter/725000-749999/736880-da-
 <text x="349.25" y="-260.35" size="2.54" layer="94" font="vector" ratio="14">Diagrama do HotBit HB8000</text>
 <text x="349.25" y="-262.89" size="1.778" layer="94" font="vector" ratio="14">Redesenhado por Danjovic, Jan 2018</text>
 <text x="-391.16" y="-45.72" size="1.778" layer="94">Rev-: Desenho inicial, Jan 2018</text>
-<text x="441.96" y="-284.48" size="2.54" layer="94" font="vector" ratio="14">A</text>
+<text x="441.96" y="-284.48" size="2.54" layer="94" font="vector" ratio="14">B</text>
 <text x="349.25" y="-265.43" size="1.778" layer="94" font="vector" ratio="14">htp://hotbit.blogger.com     danjovic@hotmail.com   </text>
 <text x="247.904" y="25.4" size="2.54" layer="92" font="vector" ratio="13" rot="R90">ADDRESS BUS</text>
 <text x="-391.16" y="-48.26" size="1.778" layer="94">Rev A: Correcao Alimentacao Conector AV, Maio 2019</text>
+<text x="-391.16" y="-50.8" size="1.778" layer="94">Rev B: Correcao nomes sinais porta Impressora, Marco 2025</text>
 </plain>
 <instances>
 <instance part="CI-19" gate="1" x="-226.06" y="149.86"/>
@@ -24774,7 +24775,7 @@ Source: http://www.produktinfo.conrad.com/datenblaetter/725000-749999/736880-da-
 <label x="-132.08" y="-121.92" size="1.4224" layer="95"/>
 </segment>
 </net>
-<net name="BSYRD" class="0">
+<net name="!STBWR" class="0">
 <segment>
 <pinref part="CI-2" gate="B" pin="CLK"/>
 <wire x1="-165.1" y1="-144.78" x2="-139.7" y2="-144.78" width="0.1524" layer="91"/>
@@ -24784,7 +24785,7 @@ Source: http://www.produktinfo.conrad.com/datenblaetter/725000-749999/736880-da-
 <label x="-132.08" y="-114.3" size="1.4224" layer="95"/>
 </segment>
 </net>
-<net name="!STBWR" class="0">
+<net name="!BSYRD" class="0">
 <segment>
 <pinref part="CI-13" gate="A" pin="Y4"/>
 <wire x1="-124.46" y1="-119.38" x2="-137.16" y2="-119.38" width="0.1524" layer="91"/>
