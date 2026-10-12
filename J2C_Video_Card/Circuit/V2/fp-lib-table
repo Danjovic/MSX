@@ -1,0 +1,4 @@
+(fp_lib_table
+  (version 7)
+  (lib (name "J2C_Video")(type "KiCad")(uri "$(KIPRJMOD)/J2C_Video.pretty")(options "")(descr ""))
+)

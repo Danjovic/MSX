@@ -1,0 +1,4 @@
+(sym_lib_table
+	(version 7)
+	(lib (name "J2C_Video-eagle-import") (type "KiCad") (uri "${KIPRJMOD}/J2C_Video-eagle-import.kicad_sym") (options "") (descr ""))
+)
